@@ -6,7 +6,7 @@ namespace BankApplication {
 
         private static void Main(string[] args) {
 
-            Console.WriteLine("Testing");
+            Console.WriteLine("hello john");
 
         }
 
