@@ -5,7 +5,12 @@ namespace BankApplication {
 
     internal class Customer : User {
 
+        //Accout list for the customer
         private Dictionary<string, List<string>> accounts;
+
+        //Public get and a private set
+        public string Name { get; private set; }
+        public string Password { get; private set; }
 
         //Name, password and dictionary which includes name of account
         //and the list which hold the balance and what currency it is in
@@ -13,6 +18,8 @@ namespace BankApplication {
             : base(name, password) {
 
             this.accounts = accounts;
+            Name = name;  
+            Password = password;  
 
         }
 
@@ -25,12 +32,6 @@ namespace BankApplication {
                 Console.WriteLine($"{account.Key} has {account.Value[0]}{account.Value[1]}");
 
         }
-
-        //Probably not the best way to return the name and password but it works for now
-        //Returms the string name, and password
-        public string ReturnName() { return name; }
-        public string ReturnPassword() { return password; }
-
     
     }
 

@@ -26,7 +26,7 @@ namespace BankApplication {
                 string password = Console.ReadLine();
 
                 //Check if the name and password exist on the same object in the list
-                if (customerList.Exists(x => x.ReturnName() == name && x.ReturnPassword() == password)) {
+                if (customerList.Exists(x => x.Name == name && x.Password == password)) {
 
                     NavigationMenu(name);
                     break;
@@ -43,6 +43,38 @@ namespace BankApplication {
             } while (tries < 3);
 
             Console.WriteLine("\nYour three tries are up.");
+
+        }
+
+        public static void NavigationMenu(string name) {
+
+            //Prints out the logged in account name
+            Console.WriteLine($"\nWelcome: {name}");
+
+            bool run = true;
+            while (run) {
+
+                Console.WriteLine("\n1. TODO\r\n2. Logout");
+
+                byte choice;
+                if (!byte.TryParse(Console.ReadLine(), out choice))
+                    Console.WriteLine("\nNumber 1-2.");
+
+                switch (choice) {
+                    default: //If not a valid choice
+                        Console.WriteLine("Not a valid choice.");
+                        break;
+                    case 1:
+                        Console.WriteLine("1");
+                        break;
+                    case 2: //Log out of customer
+                        Console.WriteLine($"\nLogged out of: {name}");
+                        run = false;
+                        LogIn();
+                        break;
+                }
+
+            }
 
         }
 
@@ -77,38 +109,6 @@ namespace BankApplication {
             customerList.Add(customer1);
             customerList.Add(customer2);
             customerList.Add(customer3);
-
-        }
-
-        public static void NavigationMenu(string name) {
-
-            //Prints out the logged in account name
-            Console.WriteLine($"\nWelcome: {name}");
-
-            bool run = true;
-            while (run) {
-
-                Console.WriteLine("\n1. TODO\r\n2. Logout");
-
-                byte choice;
-                if (!byte.TryParse(Console.ReadLine(), out choice))
-                    Console.WriteLine("\nNumber 1-2.");
-
-                switch (choice) {
-                    default: //If not a valid choice
-                        Console.WriteLine("Not a valid choice.");
-                        break;
-                    case 1: 
-                        Console.WriteLine("1");
-                        break;
-                    case 2: //Log out of customer
-                        Console.WriteLine($"\nLogged out of: {name}");
-                        run = false;
-                        LogIn();
-                        break;
-                }
-
-            }
 
         }
 
