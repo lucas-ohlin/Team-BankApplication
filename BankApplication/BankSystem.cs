@@ -56,10 +56,8 @@ namespace BankApplication {
                 { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr" } },
                 { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$" } },
             };
-
             //The name, the password and the dictionary from above ^
             Customer customer1 = new Customer("Tobias", "111", customer1Dict);
-
 
             //-----2nd customer-----
             var customer2Dict = new Dictionary<string, List<string>>() {
@@ -68,14 +66,12 @@ namespace BankApplication {
             };
             Customer customer2 = new Customer("Anas", "222", customer2Dict);
 
-
             //-----3rd customer-----
             var customer3Dict = new Dictionary<string, List<string>>() {
                 { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr" } },
                 { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$" } },
             };
             Customer customer3 = new Customer("Lucas", "333", customer3Dict);
-
 
             //Add the customers to the customerList
             customerList.Add(customer1);
