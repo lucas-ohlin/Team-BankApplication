@@ -26,10 +26,9 @@ namespace BankApplication {
 
                 //Check if the name and password exist on the same object in the list
                 if (customerList.Exists(x => x.Name == name && x.Password == password)) {
-
-                    NavigationMenu(name);
+                    Customer Account = customerList.Find(x => x.Name == name);
+                    NavigationMenu(Account);
                     break;
-
                 }
                 //If the name and password wasn't right, add one to tries   
                 else if (!customerList.Exists(x => x.Name == name && x.Password == password)) {
@@ -45,15 +44,15 @@ namespace BankApplication {
 
         }
 
-        public static void NavigationMenu(string name) {
+        public static void NavigationMenu(Customer Account) {
 
             //Prints out the logged in account name
-            Console.WriteLine($"\nWelcome: {name}");
+            Console.WriteLine($"\nWelcome: {Account.Name}");
 
             bool run = true;
             while (run) {
 
-                Console.WriteLine("\n1. TODO\r\n2. Something\r\n3. Logout");
+                Console.WriteLine("\n1. TODO\r\n2. Logout\r\n3. Check account balance");
 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
@@ -66,13 +65,14 @@ namespace BankApplication {
                     case 1:
                         Console.WriteLine("1");
                         break;
-                    case 2:
-                        Console.WriteLine("2");
-                        break;
-                    case 3: //Log out of customer
-                        Console.WriteLine($"\nLogged out of: {name}");
+                    case 2: //Log out of customer
+                        Console.WriteLine($"\nLogged out of: {Account.Name}");
                         run = false;
                         LogIn();
+                        break;
+                    case 3:
+                        Console.WriteLine($"All accounts for {Account.Name}");
+                        Account.CustomerInfo();
                         break;
                 }
 
