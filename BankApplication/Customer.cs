@@ -3,10 +3,13 @@ using System.Collections.Generic;
 
 namespace BankApplication {
 
+    /// <summary>
+    /// Customer class which is made up of; name, password and account(s)
+    /// </summary>
     internal class Customer : User {
 
         //Accout list for the customer
-        private Dictionary<string, List<string>> accounts;
+        public Dictionary<string, List<string>> accounts;
 
         //Public get and a private set
         public string Name { get; private set; }
