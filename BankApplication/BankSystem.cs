@@ -52,9 +52,9 @@ namespace BankApplication {
 
             bool run = true;
             while (run) {
-
+            
                 Console.WriteLine("\n1. TODO\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer");
-
+                
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
                     Console.WriteLine("\nNumber 1-4.");
