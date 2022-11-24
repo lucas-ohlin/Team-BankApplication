@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BankApplication {
 
@@ -33,7 +32,7 @@ namespace BankApplication {
 
                 }
                 //If the name and password wasn't right, add one to tries   
-                else {
+                else if (!customerList.Exists(x => x.Name == name && x.Password == password)) {
 
                     Console.WriteLine("\nNot a valid customer, try again:");
                     tries++;
@@ -54,11 +53,11 @@ namespace BankApplication {
             bool run = true;
             while (run) {
 
-                Console.WriteLine("\n1. TODO\r\n2. Logout");
+                Console.WriteLine("\n1. TODO\r\n2. Something\r\n3. Logout");
 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
-                    Console.WriteLine("\nNumber 1-2.");
+                    Console.WriteLine("\nNumber 1-3.");
 
                 switch (choice) {
                     default: //If not a valid choice
@@ -67,7 +66,10 @@ namespace BankApplication {
                     case 1:
                         Console.WriteLine("1");
                         break;
-                    case 2: //Log out of customer
+                    case 2:
+                        Console.WriteLine("2");
+                        break;
+                    case 3: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {name}");
                         run = false;
                         LogIn();
