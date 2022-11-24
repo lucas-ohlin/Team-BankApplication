@@ -32,6 +32,7 @@ namespace BankApplication {
                 Console.WriteLine($"{account.Key} has {account.Value[0]}{account.Value[1]}");
 
         }
+
     
     }
 

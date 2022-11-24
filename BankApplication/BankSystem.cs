@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace BankApplication {
@@ -27,10 +28,9 @@ namespace BankApplication {
 
                 //Check if the name and password exist on the same object in the list
                 if (customerList.Exists(x => x.Name == name && x.Password == password)) {
-
-                    NavigationMenu(name);
+                    Customer Account = customerList.Find(x => x.Name == name);
+                    NavigationMenu(Account);
                     break;
-
                 }
                 //If the name and password wasn't right, add one to tries   
                 else {
@@ -46,10 +46,10 @@ namespace BankApplication {
 
         }
 
-        public static void NavigationMenu(string name) {
+        public static void NavigationMenu(Customer Account) {
 
             //Prints out the logged in account name
-            Console.WriteLine($"\nWelcome: {name}");
+            Console.WriteLine($"\nWelcome: {Account.Name}");
 
             bool run = true;
             while (run) {
@@ -68,10 +68,10 @@ namespace BankApplication {
                         Console.WriteLine("1");
                         break;
                     case 2: //Log out of customer
-                        Console.WriteLine($"\nLogged out of: {name}");
+                        Console.WriteLine($"\nLogged out of: {Account.Name}");
                         run = false;
                         LogIn();
-                        break;
+                        break;      
                 }
 
             }
