@@ -20,7 +20,6 @@ namespace BankApplication {
             this.accounts = accounts;
             Name = name;  
             Password = password;  
-
         }
 
         //Basic information of the client, name + numbers of accounts and their balance
@@ -30,10 +29,7 @@ namespace BankApplication {
 
             foreach (var account in accounts) 
                 Console.WriteLine($"{account.Key} has {account.Value[0]}{account.Value[1]}");
-
         }
-
-    
     }
 
 }

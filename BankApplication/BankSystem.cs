@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace BankApplication {
@@ -54,11 +53,11 @@ namespace BankApplication {
             bool run = true;
             while (run) {
 
-                Console.WriteLine("\n1. TODO\r\n2. Logout");
+                Console.WriteLine("\n1. TODO\r\n2. Logout\r\n3. Check account balance");
 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
-                    Console.WriteLine("\nNumber 1-2.");
+                    Console.WriteLine("\nNumber 1-3.");
 
                 switch (choice) {
                     default: //If not a valid choice
@@ -71,7 +70,11 @@ namespace BankApplication {
                         Console.WriteLine($"\nLogged out of: {Account.Name}");
                         run = false;
                         LogIn();
-                        break;      
+                        break;
+                    case 3:
+                        Console.WriteLine($"All accounts for {Account.Name}");
+                        Account.CustomerInfo();
+                        break;
                 }
 
             }
