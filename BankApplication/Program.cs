@@ -12,7 +12,7 @@ namespace BankApplication {
 
             //Calls the login method from the BankSystem class
             BankSystem.LogIn();
-
+        
         }
 
     }

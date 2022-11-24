@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BankApplication {
 
@@ -32,7 +31,7 @@ namespace BankApplication {
                     break;
                 }
                 //If the name and password wasn't right, add one to tries   
-                else {
+                else if (!customerList.Exists(x => x.Name == name && x.Password == password)) {
 
                     Console.WriteLine("\nNot a valid customer, try again:");
                     tries++;
