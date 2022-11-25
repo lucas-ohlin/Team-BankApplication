@@ -53,11 +53,11 @@ namespace BankApplication {
             bool run = true;
             while (run) {
             
-                Console.WriteLine("\n1. TODO\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer");
+                Console.WriteLine("\n1. TODO\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer\r\n5. Open a new account");
                 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
-                    Console.WriteLine("\nNumber 1-4.");
+                    Console.WriteLine("\nNumber 1-5.");
 
                 switch (choice) {
                     default: //If not a valid choice
@@ -77,6 +77,9 @@ namespace BankApplication {
                         break;
                     case 4:
                         TransferBetweenCustomers(Account);
+                        break;
+                    case 5:
+                        Account.OpenAccount();
                         break;
                 }
 
