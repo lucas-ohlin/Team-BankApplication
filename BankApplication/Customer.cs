@@ -33,6 +33,28 @@ namespace BankApplication {
             foreach (var account in accounts) 
                 Console.WriteLine($"{account.Key} has {account.Value[0]}{account.Value[1]}");
         }
+        public void OpenAccount()
+        {
+            Console.WriteLine("What do you want to name your new account(between 4 and 20 characters)");
+            while (true)
+            {
+                string NewAccChoice=Console.ReadLine();
+                if(NewAccChoice.Length>20 || NewAccChoice.Length < 4)
+                {
+                    Console.WriteLine("The account name needs to be between 4 and 20 characters");
+                }
+                else if (accounts.ContainsKey(NewAccChoice))
+                {
+                    Console.WriteLine("This account already exists for this user");
+                }
+                else
+                {
+                    accounts.Add(NewAccChoice, new List<string>() { 0.0f.ToString(), "kr" });
+                    Console.WriteLine($"Account {NewAccChoice} was added and it has {accounts[NewAccChoice][0]}{accounts[NewAccChoice][1]} in it");
+                    break;
+                }
+            }
+        }
     }
 
 }
