@@ -51,11 +51,12 @@ namespace BankApplication {
                 {
                     while (true)
                     {
-                        Console.WriteLine("Which currency do you want to use? kr or £");
+                        Console.WriteLine("Which currency do you want to use? \n Available types of currency:\n kr \n $");
                         string Curchoice = Console.ReadLine();
-                        if (Curchoice.ToUpper() == "kr".ToUpper() || Curchoice.ToUpper() == "£".ToUpper())
+                        
+                        if (Curchoice.ToLower() == "kr" ||  Curchoice == "$")
                         {
-                            accounts.Add(NewAccChoice, new List<string>() { 0.0f.ToString(), Curchoice });
+                            accounts.Add(NewAccChoice, new List<string>() { 0.0f.ToString(), Curchoice.ToLower() });
                             Console.WriteLine($"Account {NewAccChoice} was added and it has {accounts[NewAccChoice][0]}{accounts[NewAccChoice][1]} in it");
                             break;
                         }
@@ -63,10 +64,9 @@ namespace BankApplication {
                         {
                             Console.Clear();
                             Console.WriteLine("Invalid choice, try again");
-                            
                         }
                     }
-                        break;
+                    break;
                 }
             }
         }
