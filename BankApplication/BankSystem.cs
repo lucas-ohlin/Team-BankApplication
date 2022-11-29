@@ -54,7 +54,7 @@ namespace BankApplication {
             bool run = true;
             while (run) {
             
-                Console.WriteLine("\n1. Transfer betwwen accounts\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer\r\n5. Open a new account");
+                Console.WriteLine("\n1. Transfer between accounts\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer\r\n5. Open a new account");
                 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))

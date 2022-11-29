@@ -36,17 +36,20 @@ namespace BankApplication {
         }
 
 
-        // Method to only show accounts when the user chooses
+        // Method to only show accounts when the user chooses Account to transfer to/from
         public void AccountName()
         {
+            int index = 1;
             foreach (var account in accounts)
-                Console.WriteLine(account.Key);
+                Console.WriteLine("{0}. {1}: {2} {3}", index++, account.Key,account.Value[0],account.Value[1]);
+            
         }
 
-        // working progreess soon done
+        
         public void TransferbetweenAccounts(Customer customer)
         {
             double Transfer;
+            bool In = true;
             Console.Clear();
             do
             {
@@ -57,6 +60,8 @@ namespace BankApplication {
                 if (customer.accounts.ContainsKey(TransferFrom) == true)
                 {
                     Console.Clear();
+                    while (In == true) 
+                    { 
                     Console.WriteLine("Amount to transfer from {0} : {1}", TransferFrom, customer.accounts[TransferFrom][0]);
                     double.TryParse(Console.ReadLine(), out Transfer);
                     if (Transfer > 0 && Transfer <= double.Parse(customer.accounts[TransferFrom][0]))
@@ -71,19 +76,18 @@ namespace BankApplication {
                             customer.accounts[TransferFrom][0] = (double.Parse(customer.accounts[TransferFrom][0]) - Transfer).ToString();
                             customer.accounts[TransferTo][0] = (double.Parse(customer.accounts[TransferTo][0]) + Transfer).ToString();
                             Console.WriteLine($"You have succesfully transfered {Transfer}{customer.accounts[TransferFrom][1]} from " +
-                                $"{TransferFrom} to {TransferTo}");
-                            break;
+                                $"{TransferFrom} to {TransferTo}"); customer.AccountName();  In = false; break;
                         }
-                        else Console.Clear(); Console.WriteLine("Account not found, you dont have a account of the name: " + TransferTo);
-                        
+                        else Console.Clear(); Console.WriteLine("Account not found of the name: " + TransferTo);
                     }
                     else Console.WriteLine("Amount is not valid");
-
+                    }
                 }
-                else Console.Clear(); Console.WriteLine("Account not found, you dont have a account of the name: "+TransferFrom);
+                else  Console.WriteLine("Account not found of the name: " + TransferFrom);
                 
 
-            } while (true);
+            } while (In == true);
+            Thread.Sleep(7000); Console.Clear();
         }
         public void OpenAccount()
         {
