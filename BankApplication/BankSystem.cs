@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace BankApplication {
 
@@ -53,7 +54,7 @@ namespace BankApplication {
             bool run = true;
             while (run) {
             
-                Console.WriteLine("\n1. TODO\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer\r\n5. Open a new account");
+                Console.WriteLine("\n1. Transfer betwwen accounts\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer\r\n5. Open a new account");
                 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
@@ -64,7 +65,7 @@ namespace BankApplication {
                         Console.WriteLine("Not a valid choice.");
                         break;
                     case 1:
-                        Console.WriteLine("1");
+                        Account.TransferbetweenAccounts(Account);
                         break;
                     case 2: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {Account.Name}");
@@ -86,6 +87,7 @@ namespace BankApplication {
             }
 
         }
+       
 
         private static void TransferBetweenCustomers(Customer customer) {
 
