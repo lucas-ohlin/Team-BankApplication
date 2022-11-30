@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 
 namespace BankApplication {
 
@@ -46,48 +47,7 @@ namespace BankApplication {
         }
 
         
-        public void TransferbetweenAccounts(Customer customer)
-        {
-            double Transfer;
-            bool In = true;
-            Console.Clear();
-            do
-            {
-                customer.AccountName();
-                Console.WriteLine("Which account do you want to transfer from: Name of the account");
-                string TransferFrom = Console.ReadLine();
-
-                if (customer.accounts.ContainsKey(TransferFrom) == true)
-                {
-                    Console.Clear();
-                    while (In == true) 
-                    { 
-                    Console.WriteLine("Amount to transfer from {0} : {1}", TransferFrom, customer.accounts[TransferFrom][0]);
-                    double.TryParse(Console.ReadLine(), out Transfer);
-                    if (Transfer > 0 && Transfer <= double.Parse(customer.accounts[TransferFrom][0]))
-                    {
-                        Console.Clear();
-                        customer.AccountName();
-                        Console.WriteLine("Which of the accounts above do you want to transfer To: Name of the account");
-                        string TransferTo = Console.ReadLine();
-
-                        if (customer.accounts.ContainsKey(TransferTo) == true)
-                        {
-                            customer.accounts[TransferFrom][0] = (double.Parse(customer.accounts[TransferFrom][0]) - Transfer).ToString();
-                            customer.accounts[TransferTo][0] = (double.Parse(customer.accounts[TransferTo][0]) + Transfer).ToString();
-                            Console.WriteLine($"You have succesfully transfered {Transfer}{customer.accounts[TransferFrom][1]} from " +
-                                $"{TransferFrom} to {TransferTo}"); customer.AccountName();  In = false; break;
-                        }
-                        else Console.Clear(); Console.WriteLine("Account not found of the name: " + TransferTo);
-                    }
-                    else Console.WriteLine("Amount is not valid");
-                    }
-                }
-                else  Console.WriteLine("Account not found of the name: " + TransferFrom);
-                
-
-            } while (In == true);
-            Thread.Sleep(7000); Console.Clear();
+       
         }
         public void OpenAccount()
         {
