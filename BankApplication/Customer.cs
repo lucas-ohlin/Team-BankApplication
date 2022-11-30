@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Linq;
 
 namespace BankApplication {
 
     /// <summary>
     /// Customer class which is made up of; name, password and account(s)
     /// </summary>
+
     internal class Customer : User {
 
         //Accout list for the customer
@@ -16,6 +15,7 @@ namespace BankApplication {
         //Public get and a private set
         public string Name { get; private set; }
         public string Password { get; private set; }
+        public string Tag { get; private set; }
 
         //Name, password and dictionary which includes name of account
         //and the list which hold the balance and what currency it is in
@@ -24,7 +24,9 @@ namespace BankApplication {
 
             this.accounts = accounts;
             Name = name;  
-            Password = password;  
+            Password = password;
+            Tag = "Customer";
+
         }
 
         //Basic information of the client, name + numbers of accounts and their balance
@@ -34,58 +36,20 @@ namespace BankApplication {
 
             foreach (var account in accounts) 
                 Console.WriteLine($"{account.Key} has {account.Value[0]}{account.Value[1]}");
+
         }
 
+        //Method to only show accounts when the user chooses Account to transfer to/from
+        public void AccountName() {
 
-        // Method to only show accounts when the user chooses Account to transfer to/from
-        public void AccountName()
-        {
+            Console.WriteLine("\n");
+
             int index = 1;
             foreach (var account in accounts)
                 Console.WriteLine("{0}. {1}: {2} {3}", index++, account.Key,account.Value[0],account.Value[1]);
             
         }
 
-        
-       
-        }
-        public void OpenAccount()
-        {
-            Console.WriteLine("What do you want to name your new account(between 4 and 20 characters)");
-            while (true)
-            {
-                string NewAccChoice=Console.ReadLine();
-                if(NewAccChoice.Length>20 || NewAccChoice.Length < 4)
-                {
-                    Console.WriteLine("The account name needs to be between 4 and 20 characters");
-                }
-                else if (accounts.ContainsKey(NewAccChoice))
-                {
-                    Console.WriteLine("This account already exists for this user");
-                }
-                else
-                {
-                    while (true)
-                    {
-                        Console.WriteLine("Which currency do you want to use? \n Available types of currency:\n kr \n $");
-                        string Curchoice = Console.ReadLine();
-                        
-                        if (Curchoice.ToLower() == "kr" ||  Curchoice == "$")
-                        {
-                            accounts.Add(NewAccChoice, new List<string>() { 0.0f.ToString(), Curchoice.ToLower() });
-                            Console.WriteLine($"Account {NewAccChoice} was added and it has {accounts[NewAccChoice][0]}{accounts[NewAccChoice][1]} in it");
-                            break;
-                        }
-                        else
-                        {
-                            Console.Clear();
-                            Console.WriteLine("Invalid choice, try again");
-                        }
-                    }
-                    break;
-                }
-            }
-        }
     }
 
 }
