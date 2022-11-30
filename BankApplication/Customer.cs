@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Linq;
 
 namespace BankApplication {
 
@@ -32,6 +34,20 @@ namespace BankApplication {
 
             foreach (var account in accounts) 
                 Console.WriteLine($"{account.Key} has {account.Value[0]}{account.Value[1]}");
+        }
+
+
+        // Method to only show accounts when the user chooses Account to transfer to/from
+        public void AccountName()
+        {
+            int index = 1;
+            foreach (var account in accounts)
+                Console.WriteLine("{0}. {1}: {2} {3}", index++, account.Key,account.Value[0],account.Value[1]);
+            
+        }
+
+        
+       
         }
         public void OpenAccount()
         {

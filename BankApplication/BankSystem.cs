@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace BankApplication {
 
-    internal class BankSystem {
+    internal class BankSystem
+    {
 
         //List of customer objects
         public static List<Customer> customerList = new List<Customer>();
 
-        public static void LogIn() {
+
+
+        public static void LogIn()
+        {
 
             Console.WriteLine("Welcome to the bank.\nPlease login.");
 
@@ -16,7 +21,8 @@ namespace BankApplication {
             byte tries = 0;
 
             //A while do loop if tries is less than 3
-            do {
+            do
+            {
 
                 Console.WriteLine("\nname:");
                 string name = Console.ReadLine();
@@ -25,14 +31,16 @@ namespace BankApplication {
                 string password = Console.ReadLine();
 
                 //Check if the name and password exist on the same object in the list
-                if (customerList.Exists(x => x.Name == name && x.Password == password)) {
+                if (customerList.Exists(x => x.Name == name && x.Password == password))
+                {
                     //Sends the correct account to the navmenu for further use
                     Customer Account = customerList.Find(x => x.Name == name);
                     NavigationMenu(Account);
                     break;
                 }
                 //If the name and password wasn't right, add one to tries   
-                else if (!customerList.Exists(x => x.Name == name && x.Password == password)) {
+                else if (!customerList.Exists(x => x.Name == name && x.Password == password))
+                {
 
                     Console.WriteLine("\nNot a valid customer, try again:");
                     tries++;
@@ -45,26 +53,29 @@ namespace BankApplication {
 
         }
 
-        public static void NavigationMenu(Customer Account) {
+        public static void NavigationMenu(Customer Account)
+        {
 
             //Prints out the logged in account name
             Console.WriteLine($"\nWelcome: {Account.Name}");
 
             bool run = true;
-            while (run) {
-            
-                Console.WriteLine("\n1. TODO\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer\r\n5. Open a new account");
-                
+            while (run)
+            {
+
+                Console.WriteLine("\n1. Transfer between accounts\r\n2. Logout\r\n3. Check account balance\r\n4. Transfer funds to another costumer\r\n5. Open a new account");
+
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
                     Console.WriteLine("\nNumber 1-5.");
 
-                switch (choice) {
+                switch (choice)
+                {
                     default: //If not a valid choice
                         Console.WriteLine("Not a valid choice.");
                         break;
                     case 1:
-                        Console.WriteLine("1");
+                        TransferbetweenAccounts(Account);
                         break;
                     case 2: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {Account.Name}");
@@ -79,7 +90,7 @@ namespace BankApplication {
                         TransferBetweenCustomers(Account);
                         break;
                     case 5:
-                        Account.OpenAccount();
+                        OpenAccount();
                         break;
                 }
 
@@ -87,7 +98,9 @@ namespace BankApplication {
 
         }
 
-        private static void TransferBetweenCustomers(Customer customer) {
+
+        private static void TransferBetweenCustomers(Customer customer)
+        {
 
             //Displays the accounts in the logged in customer
             customer.CustomerInfo();
@@ -97,7 +110,8 @@ namespace BankApplication {
             Customer customer2;
 
             //Find account in logged into customer
-            while (true) {
+            while (true)
+            {
 
                 Console.WriteLine($"\nAccount name in {customer.Name} to transfer from:");
                 choice = Console.ReadLine();
@@ -110,13 +124,15 @@ namespace BankApplication {
             }
 
             //Find the 2nd customer account
-            while (true) {
+            while (true)
+            {
 
                 Console.WriteLine("\nCustomer name to transfer to:");
                 customerName = Console.ReadLine();
-                
+
                 //Check if the customer exists in the list using the previous input
-                if (customerList.Exists(x => x.Name == customerName)) {
+                if (customerList.Exists(x => x.Name == customerName))
+                {
 
                     //Create an object using the name
                     customer2 = customerList.Find(x => x.Name == customerName);
@@ -124,7 +140,8 @@ namespace BankApplication {
                     //Display accounts in that customer
                     customer2.CustomerInfo();
 
-                    while (true) {
+                    while (true)
+                    {
 
                         Console.WriteLine($"\nAccount name in {customer2.Name} to transfer to:");
                         choice2 = Console.ReadLine();
@@ -141,7 +158,7 @@ namespace BankApplication {
                 }
 
                 //If no customer with the name inputed exists
-                else if (!customerList.Exists(x => x.Name == customerName)) 
+                else if (!customerList.Exists(x => x.Name == customerName))
                     Console.WriteLine("Not a valid name, try again.");
             }
 
@@ -150,15 +167,17 @@ namespace BankApplication {
                               $"Transfer to: {customer2.Name} : {customer2.accounts[choice2][0] + customer2.accounts[choice2][1]}\n" +
                               $"How much do you want to transfer?:");
 
-            while (true) {
+            while (true)
+            {
 
                 //Error handling, check if it can't parse it as a float
                 float amount;
-                if (float.TryParse(Console.ReadLine(), out amount)) {
-                    
+                if (float.TryParse(Console.ReadLine(), out amount))
+                {
+
                     //Subtracts amount from the account which we want to move the funds from
                     customer.accounts[choice][0] = (float.Parse(customer.accounts[choice][0]) - amount).ToString();
-    
+
                     //Adds the amount to the account we wanted to move the fund to
                     customer2.accounts[choice2][0] = (float.Parse(customer2.accounts[choice2][0]) + amount).ToString();
 
@@ -179,7 +198,8 @@ namespace BankApplication {
 
         }
 
-        public static void CustomerCreation() {
+        public static void CustomerCreation()
+        {
 
             //The 1st string is the name of the account in the customer, 
             //The list includes the balance of the account and what currency it has
@@ -212,6 +232,51 @@ namespace BankApplication {
 
         }
 
-    }
+        public static void TransferbetweenAccounts(Customer customer)
+        {
+            double Transfer;
+            bool In = true;
 
+            Console.Clear();
+            do
+            {
+                customer.AccountName();
+                Console.WriteLine("Which account do you want to transfer from: Name of the account");
+                string TransferFrom = Console.ReadLine();
+
+
+                if (customer.accounts.ContainsKey(TransferFrom) == true)
+                {
+                    Console.Clear();
+                    while (In == true)
+                    {
+                        Console.WriteLine("Amount to transfer from {0} : {1}", TransferFrom, customer.accounts[TransferFrom][0]);
+                        double.TryParse(Console.ReadLine(), out Transfer);
+                        if (Transfer > 0 && Transfer <= double.Parse(customer.accounts[TransferFrom][0]))
+                        {
+                            Console.Clear();
+                            customer.AccountName();
+                            Console.WriteLine("Which of the accounts above do you want to transfer To: Name of the account");
+                            string TransferTo = Console.ReadLine();
+
+                            if (customer.accounts.ContainsKey(TransferTo) == true)
+                            {
+                                customer.accounts[TransferFrom][0] = (double.Parse(customer.accounts[TransferFrom][0]) - Transfer).ToString();
+                                customer.accounts[TransferTo][0] = (double.Parse(customer.accounts[TransferTo][0]) + Transfer).ToString();
+                                Console.WriteLine($"You have succesfully transfered {Transfer}{customer.accounts[TransferFrom][1]} from " +
+                                    $"{TransferFrom} to {TransferTo}"); customer.AccountName(); In = false; break;
+                            }
+                            else Console.Clear(); Console.WriteLine("Account not found of the name: " + TransferTo);
+                        }
+                        else Console.WriteLine("Amount is not valid");
+                    }
+                }
+                else Console.WriteLine("Account not found of the name: " + TransferFrom);
+
+
+            } while (In == true);
+            Thread.Sleep(7000); Console.Clear();
+
+        }
+    }
 }
