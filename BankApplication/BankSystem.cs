@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
 using System.Threading;
 
 namespace BankApplication {
@@ -10,7 +9,8 @@ namespace BankApplication {
         //List of customer objects
         public static List<Customer> customerList = new List<Customer>();
 
-        //Exchange rate
+        //Exchange rate for USD
+        private static float sekToUsd = 10.3f;
         public static void LogIn() {
 
             Console.WriteLine("Welcome to the bank.\nPlease login.");
@@ -298,7 +298,6 @@ namespace BankApplication {
             float transfer2;
             string currency1 = customer1.accounts[account1][1];
             string currency2 = customer2.accounts[account2][1];
-            float sekToUsd = 10.3f;
 
             //If its the same currency its sends over the same amount
             if (currency1 == currency2)
