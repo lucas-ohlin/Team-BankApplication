@@ -16,6 +16,9 @@ namespace BankApplication {
         //List of admin objects
         public static List<Admin> adminList = new List<Admin>();
 
+        //Exchange rate for USD
+        private static float sekToUsd = 10.3f;
+
         public static void LogIn() {
 
             Console.WriteLine("Welcome to the bank.\nPlease login.");
@@ -189,7 +192,7 @@ namespace BankApplication {
 
         public static void TransferbetweenAccounts(Customer customer) {
 
-            double transfer;
+            float transfer;
             bool run = true;
 
             do {
@@ -206,7 +209,7 @@ namespace BankApplication {
 
                         Console.WriteLine("Amount to transfer from {0} : {1}", transferFrom, customer.accounts[transferFrom][0]);
 
-                        if (!double.TryParse(Console.ReadLine(), out transfer))
+                        if (!float.TryParse(Console.ReadLine(), out transfer))
                             Console.WriteLine("Numbers only... Try again:");
 
                         //Parse the account balance as a double and check if its less than the amount specified for a transfer
@@ -220,9 +223,8 @@ namespace BankApplication {
                             //Check if the accounts contains the name
                             if (customer.accounts.ContainsKey(transferTo) == true) {
 
-                                //Transfer money between the two acccounts
-                                customer.accounts[transferFrom][0] = (double.Parse(customer.accounts[transferFrom][0]) - transfer).ToString();
-                                customer.accounts[transferTo][0] = (double.Parse(customer.accounts[transferTo][0]) + transfer).ToString();
+                                //Check currency and send over correct exchange
+                                ExchangeRate(customer, customer, transferFrom, transferTo, transfer);
 
                                 Console.WriteLine($"You have succesfully transfered {transfer}{customer.accounts[transferFrom][1]} from " +
                                     $"{transferFrom} to {transferTo}");
@@ -324,11 +326,8 @@ namespace BankApplication {
                 float amount;
                 if (float.TryParse(Console.ReadLine(), out amount)) {
 
-                    //Subtracts amount from the account which we want to move the funds from
-                    customer.accounts[choice][0] = (float.Parse(customer.accounts[choice][0]) - amount).ToString();
-
-                    //Adds the amount to the account we wanted to move the fund to
-                    customer2.accounts[choice2][0] = (float.Parse(customer2.accounts[choice2][0]) + amount).ToString();
+                    //Check currency and send over correct amount
+                    ExchangeRate(customer, customer2, choice, choice2, amount);
 
                     //Displays what was transfered and the new balance of the logged in customer
                     Console.WriteLine($"\nTransfered {amount}{customer.accounts[choice][1]} from {customer.Name} to {customer2.Name}");
@@ -347,6 +346,36 @@ namespace BankApplication {
 
         }
 
+        public static void ExchangeRate(Customer customer1, Customer customer2, string account1, string account2, float transfer1)
+        {
+
+            //Creates new variables that is later used
+            float transfer2;
+            string currency1 = customer1.accounts[account1][1];
+            string currency2 = customer2.accounts[account2][1];
+
+            //If its the same currency its sends over the same amount
+            if (currency1 == currency2)
+            {
+                customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
+                customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer1).ToString();
+            }
+            //If its not the same and the second one is dollar the amount is divided by the exchange rate
+            else if (currency2 == "$")
+            {
+                transfer2 = transfer1 / sekToUsd;
+                customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
+                customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
+            }
+            //If its not the same and the second one is swedish crowns the amount is multiplied by the exchange rate
+            else if (currency2 == "kr")
+            {
+                transfer2 = transfer1 * sekToUsd;
+                customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
+                customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
+            }
+
+        }
         public static void CustomerCreation() {
 
             string name = Console.ReadLine();
