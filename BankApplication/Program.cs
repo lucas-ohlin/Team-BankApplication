@@ -7,8 +7,18 @@ namespace BankApplication {
 
         private static void Main(string[] args) {
 
-            //Creation of the 3 customers using the method from BankSystem
-            BankSystem.CustomerCreation();
+            //TEMP INFORMATION
+
+            //Default Customer logins
+            //Tobias - 111
+            //Anas - 222
+            //Lucas - 333
+
+            //Default Admin Login
+            //Gustav - 000
+
+            //Creation of the 3 customers using the method from BankSystem as well as an Admin
+            BankSystem.DefaultUserCreation();
 
             //Calls the login method from the BankSystem class
             BankSystem.LogIn();
