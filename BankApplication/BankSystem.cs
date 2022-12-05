@@ -378,6 +378,7 @@ namespace BankApplication {
         }
         public static void CustomerCreation() {
 
+            Console.WriteLine("\nName:");
             string name = Console.ReadLine();
 
             //A character limit between 1-20
@@ -388,6 +389,7 @@ namespace BankApplication {
             else if (customerList.Exists(x => x.Name == name)) 
                 Console.WriteLine("This account already exists for this user");
 
+            Console.WriteLine("\nPassword:");
             string password = Console.ReadLine();
 
             //Creates a new customer object and adds it to the customerList
