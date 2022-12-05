@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace BankApplication {
 
+    /// <summary>
+    /// User is an abstract class which is the base of both Customer and Admin
+    /// </summary>
+
     //Abstract since this class is not called and only inherited
     abstract class User {
 

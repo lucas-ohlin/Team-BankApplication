@@ -6,18 +6,17 @@ namespace BankApplication {
     /// <summary>
     /// Admin class which is made up of; name and password
     /// </summary>
+   
     internal class Admin : User {
 
-        private string Name { get; set; }
-        private string Password { get; set; }
-        private string Tag { get; set; }
+        public string Name { get; private set; }
+        public string Password { get; private set; }
 
         public Admin(string name, string password) 
             : base(name, password) {
 
             Name = name;
             Password = password;
-            Tag = "Admin";
 
         }
 
