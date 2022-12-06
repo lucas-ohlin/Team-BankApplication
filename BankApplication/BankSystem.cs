@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace BankApplication {
@@ -9,8 +10,6 @@ namespace BankApplication {
         //List of customer objects
         public static List<Customer> customerList = new List<Customer>();
 
-        //Exchange rate for USD
-        private static float sekToUsd = 10.3f;
         public static void LogIn() {
 
             Console.WriteLine("Welcome to the bank.\nPlease login.");
@@ -298,6 +297,25 @@ namespace BankApplication {
             float transfer2;
             string currency1 = customer1.accounts[account1][1];
             string currency2 = customer2.accounts[account2][1];
+            string filePath = "ExchangeRate.txt";
+
+            //Creates seperate txt file for exchange rate if ut does not currently exist
+            if (!File.Exists(filePath))
+            {
+                using StreamWriter sw = File.CreateText(filePath);
+                sw.WriteLine("10,3");
+                sw.WriteLine(DateTime.Now.ToString());
+                sw.Close();
+            }
+
+            //Checks the current exchange rate in the file
+            using StreamReader sr = File.OpenText(filePath);
+            float usdToSek;
+            string Time;
+            usdToSek = float.Parse(sr.ReadLine());
+            Time = sr.ReadLine();
+            Console.WriteLine("\nThe exchange rate was last updated:{0}",Time);
+            sr.Close();
 
             //If its the same currency its sends over the same amount
             if (currency1 == currency2)
@@ -308,14 +326,14 @@ namespace BankApplication {
             //If its not the same and the second one is dollar the amount is divided by the exchange rate
             else if (currency2 == "$")
             {
-                transfer2 = transfer1 / sekToUsd;
+                transfer2 = transfer1 / usdToSek;
                 customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
                 customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
             }
             //If its not the same and the second one is swedish crowns the amount is multiplied by the exchange rate
             else if (currency2 == "kr")
             {
-                transfer2 = transfer1 * sekToUsd;
+                transfer2 = transfer1 * usdToSek;
                 customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
                 customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
             }
