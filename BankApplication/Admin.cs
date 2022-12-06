@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace BankApplication {
 
@@ -24,6 +25,17 @@ namespace BankApplication {
 
             Console.WriteLine($"{Name} & {Password}");
 
+        }
+
+        public static void AdminUpdateRates()
+        {
+            File.WriteAllText("ExchangeRate.txt", String.Empty);
+            Console.WriteLine("What is the new USD to SEK rate:");
+            string usdToSek = Console.ReadLine();
+            using StreamWriter sw = File.CreateText("ExchangeRate.txt");
+            sw.WriteLine(usdToSek);
+            sw.WriteLine(DateTime.Now.ToString());
+            sw.Close();
         }
 
     }
