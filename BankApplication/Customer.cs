@@ -15,7 +15,6 @@ namespace BankApplication {
         //Public get and a private set
         public string Name { get; private set; }
         public string Password { get; private set; }
-        public string Tag { get; private set; }
 
         //Name, password and dictionary which includes name of account
         //and the list which hold the balance and what currency it is in
@@ -25,7 +24,6 @@ namespace BankApplication {
             this.accounts = accounts;
             Name = name;  
             Password = password;
-            Tag = "Customer";
 
         }
 

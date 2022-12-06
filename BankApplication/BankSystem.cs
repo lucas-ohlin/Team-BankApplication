@@ -2,13 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Globalization;
+
 
 namespace BankApplication {
+
+    /// <summary>
+    /// BankApplication contains most of the methods for the actual project
+    /// </summary>
 
     internal class BankSystem {
 
         //List of customer objects
         public static List<Customer> customerList = new List<Customer>();
+
+        //List of admin objects
+        public static List<Admin> adminList = new List<Admin>();
+
+        //Exchange rate for USD
+        private static float sekToUsd = 10.3f;
 
         public static void LogIn() {
 
@@ -26,7 +38,7 @@ namespace BankApplication {
                 Console.WriteLine("password:");
                 string password = Console.ReadLine();
 
-                //Check if the name and password exist on the same object in the list
+                //Check if the name and password exist on the same object in the customerList
                 if (customerList.Exists(x => x.Name == name && x.Password == password)) {
 
                     //Sends the correct account to the navmenu for further use
@@ -35,17 +47,63 @@ namespace BankApplication {
                     break;
 
                 }
-                //If the name and password wasn't right, add one to tries   
-                else if (!customerList.Exists(x => x.Name == name && x.Password == password)) {
+
+                //If there's no such customer check if a admin with the name and password exist in the adminList
+                else if (adminList.Exists(x => x.Name == name && x.Password == password)) {
+
+                    //Sends the correct admin to the admin navmenu for further use
+                    Admin admin = adminList.Find(x => x.Name == name && x.Password == password);
+                    AdminNavigationMenu(admin);
+                    break;
+
+                }
+
+                //If the name and password doesn't exist in either list, add one to tries   
+                else if (!customerList.Exists(x => x.Name == name && x.Password == password) || !adminList.Exists(x => x.Name == name && x.Password == password)) {
 
                     Console.WriteLine("\nNot a valid user, try again:");
                     tries++;
-
+                    
                 }
 
             } while (tries < 3);
 
             Console.WriteLine("\nYour three tries are up.");
+
+        }
+
+        public static void AdminNavigationMenu(Admin admin) {
+
+            //Prints out the logged in admin name
+            Console.WriteLine($"\nWelcome ADMIN: {admin.Name}");
+
+            bool run = true;
+            while (run) {
+
+                Console.WriteLine("\n1. Admin information\r\n2. Create a new customer\r\n3. Logout");
+
+                byte choice;
+                if (!byte.TryParse(Console.ReadLine(), out choice))
+                    Console.WriteLine("\nNumber 1-2.");
+
+                switch (choice) {
+                    default: //If not a valid choice
+                        Console.WriteLine("Not a valid choice.");
+                        break;
+                    case 1: //Admin information
+                        admin.AdminInfo();
+                        break;
+                    case 2: //Create new customers
+                        CustomerCreation();
+                        break;
+                    case 3: //Log out of Admin
+                        Console.WriteLine($"\nLogged out of: {admin.Name}");
+                        run = false;
+                        LogIn();
+                        break;
+                }
+
+            }
 
         }
 
@@ -221,6 +279,7 @@ namespace BankApplication {
                     break;
                 else
                     Console.WriteLine("Not a valid account name, try again.");
+
             }
 
             //Find the 2nd customer account
@@ -341,6 +400,27 @@ namespace BankApplication {
         }
         public static void CustomerCreation() {
 
+            Console.WriteLine("\nName:");
+            string name = Console.ReadLine();
+
+            //A character limit between 1-20
+            if (name.Length > 20 || name.Length < 1)
+                Console.WriteLine("The account name needs to be between 1 and 20 characters");
+
+            //Check if the account name already exists
+            else if (customerList.Exists(x => x.Name == name)) 
+                Console.WriteLine("This account already exists for this user");
+
+            Console.WriteLine("\nPassword:");
+            string password = Console.ReadLine();
+
+            //Creates a new customer object and adds it to the customerList
+            customerList.Add(new Customer(name, password, new Dictionary<string, List<string>>()));
+
+        }
+
+        public static void DefaultUserCreation() {
+
             //The 1st string is the name of the account in the customer, 
             //The list includes the balance of the account and what currency it has
             //When we're gonna create new accounts for the customers these are the things we're hopefully gonna call
@@ -369,6 +449,12 @@ namespace BankApplication {
             customerList.Add(customer1);
             customerList.Add(customer2);
             customerList.Add(customer3);
+
+            //Admin creation
+            var admin1 = new Admin("Gustav", "000");
+
+            //Add the admin to the adminList
+            adminList.Add(admin1);
 
         }
 
