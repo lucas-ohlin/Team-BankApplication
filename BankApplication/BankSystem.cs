@@ -401,31 +401,35 @@ namespace BankApplication {
                           Console.WriteLine("Which account would you like to loan to?");
                           string loanto = Console.ReadLine();
                           if(loanto == "") { break; } //return to nav menu by pressing enter
-                          //Checks if the specified account exists
-                          if (customer.accounts.ContainsKey(loanto) == true)
-                          {
-                              //Displays the interest rate and how much the user will have to pay monthly
-                              Console.WriteLine($"The interest rate is currently: {interest * 100}%\nMonthly interest for a loan of {loanamount}{customer.accounts[loanto][1]} is {loanamount * interest}{customer.accounts[loanto][1]}");
-                              Console.WriteLine("\nDo you wish to take this loan? Yes or No");
-                              while (true)
-                              {
-                                 string loanchoice = Console.ReadLine();
-                                 //If the user decides to take the loan
-                                 if (loanchoice.ToUpper() == "YES")
-                                 {
-                                     //Adds the specified amount to the account of choice by user
-                                     customer.accounts[loanto][0] = (double.Parse(customer.accounts[loanto][0]) + loanamount).ToString();
-                                     Console.WriteLine($"{loanamount}{customer.accounts[loanto][1]} has been added to {loanto}");
-                                     break;
-                                 }
-                                 //Returns the user to the navigation menu if they choose not to take the loan
-                                 if (loanchoice.ToUpper() == "NO") {break;}
+                        if ((double.Parse(customer.accounts[loanto][0]) * 5 > loanamount))
+                        {
+                            //Checks if the specified account exists
+                            if (customer.accounts.ContainsKey(loanto) == true)
+                            {
+                                //Displays the interest rate and how much the user will have to pay monthly
+                                Console.WriteLine($"The interest rate is currently: {interest * 100}%\nMonthly interest for a loan of {loanamount}{customer.accounts[loanto][1]} is {loanamount * interest}{customer.accounts[loanto][1]}");
+                                Console.WriteLine("\nDo you wish to take this loan? Yes or No");
+                                while (true)
+                                {
+                                    string loanchoice = Console.ReadLine();
+                                    //If the user decides to take the loan
+                                    if (loanchoice.ToUpper() == "YES")
+                                    {
+                                        //Adds the specified amount to the account of choice by user
+                                        customer.accounts[loanto][0] = (double.Parse(customer.accounts[loanto][0]) + loanamount).ToString();
+                                        Console.WriteLine($"{loanamount}{customer.accounts[loanto][1]} has been added to {loanto}");
+                                        break;
+                                    }
+                                    //Returns the user to the navigation menu if they choose not to take the loan
+                                    if (loanchoice.ToUpper() == "NO") { break; }
 
-                                 else Console.WriteLine("Invalid answer, please answer Yes or No");
-                              }
-                              break;
-                          }
-                                else Console.WriteLine("Account not found, try again");
+                                    else Console.WriteLine("Invalid answer, please answer Yes or No");
+                                }
+                                break;
+                            }
+                            else Console.WriteLine("Account not found, try again");
+                        }
+                        else Console.WriteLine("You can't take a loan that is 5 times larger than what you currently have on your account");
                      }
                      break;
 
