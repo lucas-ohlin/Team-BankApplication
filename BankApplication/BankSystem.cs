@@ -112,7 +112,7 @@ namespace BankApplication {
             bool run = true;
             while (run) {
 
-                Console.WriteLine("\n1. Check account balance\r\n2. Open new account\r\n3. Transfer between accounts\r\n4. Transfer funds to another costumer\r\n5. Logout");
+                Console.WriteLine("\n1. Check account balance\r\n2. Open new account\r\n3. Transfer between accounts\r\n4. Transfer funds to another costumer\r\n5. Take a loan\r\n6. Logout");
 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
@@ -135,11 +135,15 @@ namespace BankApplication {
                     case 4: //Transfer between customers
                         TransferBetweenCustomers(account);
                         break;
-                    case 5: //Log out of customer
+                    case 5: //Take a loan
+                        Loan(account);
+                        break;
+                    case 6: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {account.Name}");
                         run = false;
                         LogIn();
                         break;
+                    
                 }
 
             }
@@ -375,6 +379,57 @@ namespace BankApplication {
                 customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
             }
 
+        }
+       
+        public static void Loan(Customer customer)
+        {
+            double interest = 0.03;
+            while (true)
+            {
+                 Console.WriteLine("How much would you like to loan?");
+                 //Makes sure only numbers are entered and gets the amount the user wishes to loan
+                 if (!double.TryParse(Console.ReadLine(), out double loanamount))
+                     Console.WriteLine("Numbers only, try again:");
+                 //Makes sure the user can't enter a number below 0
+                 if (loanamount <= 0)
+                     Console.WriteLine("Please choose an amount above 0");
+                 if (loanamount > 0)
+                 {
+                     while (true)
+                     {
+                          Console.WriteLine("Which account would you like to loan to?");
+                          customer.AccountName();
+                          string loanto = Console.ReadLine();
+                          if(loanto == "") { break; } //return to nav menu by pressing enter
+                          if (customer.accounts.ContainsKey(loanto) == true)
+                          {
+                              Console.WriteLine($"The interest rate is currently: {interest * 100}%\nMonthly interest for a loan of {loanamount}{customer.accounts[loanto][1]} is {loanamount * interest}{customer.accounts[loanto][1]}");
+                              Console.WriteLine("\nDo you wish to take this loan? Yes or No");
+                              while (true)
+                              {
+                                 string loanchoice = Console.ReadLine();
+                                 if (loanchoice.ToUpper() == "YES")
+                                 {
+                                     //Adds the specified amount to the account of choice by user
+                                     customer.accounts[loanto][0] = (double.Parse(customer.accounts[loanto][0]) + loanamount).ToString();
+                                     Console.WriteLine($"{loanamount}{customer.accounts[loanto][1]} has been added to {loanto}");
+                                     break;
+                                 }
+                                 //Returns the user to the navigation menu if they choose not to take the loan
+                                 if (loanchoice.ToUpper() == "NO") {break;}
+
+                                 else Console.WriteLine("Invalid answer, please answer Yes or No");
+                              }
+                              break;
+                          }
+                                else Console.WriteLine("Account not found, try again");
+                     }
+                     break;
+
+                            
+                 }
+            }
+                    
         }
         public static void CustomerCreation() {
 
