@@ -92,9 +92,11 @@ namespace BankApplication {
                         break;
                     case 1: //Admin information
                         admin.AdminInfo();
+                        PressEnter();
                         break;
                     case 2: //Create new customers
                         CustomerCreation();
+                        PressEnter();
                         break;
                     case 3: //Log out of Admin
                         Console.WriteLine($"\nLogged out of: {admin.Name}");
@@ -128,15 +130,19 @@ namespace BankApplication {
                     case 1: //Check account balance
                         Console.WriteLine($"All accounts for {account.Name}");
                         account.CustomerInfo();
+                        PressEnter();
                         break;
                     case 2: //Open new account
                         OpenAccount(account);
+                        PressEnter();
                         break;
                     case 3: //Transfer between accounts
                         TransferbetweenAccounts(account);
+                        PressEnter();
                         break;
                     case 4: //Transfer between customers
                         TransferBetweenCustomers(account);
+                        PressEnter();
                         break;
                     case 5: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {account.Name}");
@@ -417,6 +423,18 @@ namespace BankApplication {
             //Creates a new customer object and adds it to the customerList
             customerList.Add(new Customer(name, password, new Dictionary<string, List<string>>()));
 
+        }
+
+        public static void PressEnter()
+        {
+            Console.WriteLine("\ntryck på ENTER för meny");
+            ConsoleKeyInfo x;
+            do
+            {
+                x = Console.ReadKey();
+            }
+            while (x.Key != ConsoleKey.Enter);
+            Console.Write("\n");
         }
 
         public static void DefaultUserCreation() {
