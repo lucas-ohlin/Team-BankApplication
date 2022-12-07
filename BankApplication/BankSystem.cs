@@ -396,18 +396,21 @@ namespace BankApplication {
                  if (loanamount > 0)
                  {
                      while (true)
-                     {
-                          Console.WriteLine("Which account would you like to loan to?");
+                     {                   
                           customer.AccountName();
+                          Console.WriteLine("Which account would you like to loan to?");
                           string loanto = Console.ReadLine();
                           if(loanto == "") { break; } //return to nav menu by pressing enter
+                          //Checks if the specified account exists
                           if (customer.accounts.ContainsKey(loanto) == true)
                           {
+                              //Displays the interest rate and how much the user will have to pay monthly
                               Console.WriteLine($"The interest rate is currently: {interest * 100}%\nMonthly interest for a loan of {loanamount}{customer.accounts[loanto][1]} is {loanamount * interest}{customer.accounts[loanto][1]}");
                               Console.WriteLine("\nDo you wish to take this loan? Yes or No");
                               while (true)
                               {
                                  string loanchoice = Console.ReadLine();
+                                 //If the user decides to take the loan
                                  if (loanchoice.ToUpper() == "YES")
                                  {
                                      //Adds the specified amount to the account of choice by user
