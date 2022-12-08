@@ -33,7 +33,8 @@ namespace BankApplication {
             Console.WriteLine($"\n{name} has {accounts.Count} accounts:");
 
             foreach (var account in accounts) 
-                Console.WriteLine($"{account.Key} has {account.Value[0]}{account.Value[1]}");
+                Console.WriteLine($"{account.Value[2]} - {account.Key} has {account.Value[0]}{account.Value[1]}");
+                Console.ReadKey();
 
         }
 
