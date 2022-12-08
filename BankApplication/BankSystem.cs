@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using System.Globalization;
 using System.Linq;
+
 
 namespace BankApplication {
 
@@ -92,9 +95,11 @@ namespace BankApplication {
                         break;
                     case 1: //Admin information
                         admin.AdminInfo();
+                        PressEnter();
                         break;
                     case 2: //Create new customers
                         CustomerCreation();
+                        PressEnter();
                         break;
                     case 3: //Log out of Admin
                         Console.WriteLine($"\nLogged out of: {admin.Name}");
@@ -115,7 +120,7 @@ namespace BankApplication {
             bool run = true;
             while (run) {
 
-                Console.WriteLine("\n1. Check account balance\r\n2. Open new account\r\n3. Transfer between accounts\r\n4. Transfer funds to another costumer\r\n5. Logout");
+                Console.WriteLine("\n1. Check account balance\r\n2. Open new account\r\n3. Transfer between accounts\r\n4. Transfer funds to another costumer\r\n5. Take a loan\r\n6. Logout");
 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
@@ -128,23 +133,31 @@ namespace BankApplication {
                     case 1: //Check account balance
                         Console.WriteLine($"All accounts for {account.Name}");
                         account.CustomerInfo();
+                        PressEnter();
                         break;
                     case 2: //Open new account
                         OpenAccount(account);
+                        PressEnter();
                         break;
                     case 3: //Transfer between accounts
                         TransferbetweenAccounts(account);
+                        PressEnter();
                         break;
                     case 4: //Transfer between customers
                         TransferBetweenCustomers(account);
+                        PressEnter();
                         break;
-                    case 5: //Log out of customer
+                    case 5: //Take a loan
+                        Loan(account);
+                        break;
+                    case 6: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {account.Name}");
                         run = false;
                         LogIn();
                         break;
-                    case 6: Savingsaccount(account);
+                    case 7: Savingsaccount(account);
                         break;
+
                 }
 
             }
@@ -358,6 +371,25 @@ namespace BankApplication {
             float transfer2;
             string currency1 = customer1.accounts[account1][1];
             string currency2 = customer2.accounts[account2][1];
+            string filePath = "ExchangeRate.txt";
+
+            //Creates seperate txt file for exchange rate if ut does not currently exist
+            if (!File.Exists(filePath))
+            {
+                using StreamWriter sw = File.CreateText(filePath);
+                sw.WriteLine("10,3");
+                sw.WriteLine(DateTime.Now.ToString());
+                sw.Close();
+            }
+
+            //Checks the current exchange rate in the file
+            using StreamReader sr = File.OpenText(filePath);
+            float usdToSek;
+            string Time;
+            usdToSek = float.Parse(sr.ReadLine());
+            Time = sr.ReadLine();
+            Console.WriteLine("\nThe exchange rate was last updated:{0}",Time);
+            sr.Close();
 
             //If its the same currency its sends over the same amount
             if (currency1 == currency2)
@@ -368,18 +400,76 @@ namespace BankApplication {
             //If its not the same and the second one is dollar the amount is divided by the exchange rate
             else if (currency2 == "$")
             {
-                transfer2 = transfer1 / sekToUsd;
+                transfer2 = transfer1 / usdToSek;
                 customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
                 customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
             }
             //If its not the same and the second one is swedish crowns the amount is multiplied by the exchange rate
             else if (currency2 == "kr")
             {
-                transfer2 = transfer1 * sekToUsd;
+                transfer2 = transfer1 * usdToSek;
                 customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
                 customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
             }
 
+        }
+       
+        public static void Loan(Customer customer)
+        {
+            double interest = 0.03;
+            while (true)
+            {
+                 Console.WriteLine("How much would you like to loan?");
+                 //Makes sure only numbers are entered and gets the amount the user wishes to loan
+                 if (!double.TryParse(Console.ReadLine(), out double loanamount))
+                     Console.WriteLine("Numbers only, try again:");
+                 //Makes sure the user can't enter a number below 0
+                 if (loanamount <= 0)
+                     Console.WriteLine("Please choose an amount above 0");
+                 if (loanamount > 0)
+                 {
+                     while (true)
+                     {                   
+                          customer.AccountName();
+                          Console.WriteLine("Which account would you like to loan to?");
+                          string loanto = Console.ReadLine();
+                          if(loanto == "") { break; } //return to nav menu by pressing enter
+                        if ((double.Parse(customer.accounts[loanto][0]) * 5 > loanamount))
+                        {
+                            //Checks if the specified account exists
+                            if (customer.accounts.ContainsKey(loanto) == true)
+                            {
+                                //Displays the interest rate and how much the user will have to pay monthly
+                                Console.WriteLine($"The interest rate is currently: {interest * 100}%\nMonthly interest for a loan of {loanamount}{customer.accounts[loanto][1]} is {loanamount * interest}{customer.accounts[loanto][1]}");
+                                Console.WriteLine("\nDo you wish to take this loan? Yes or No");
+                                while (true)
+                                {
+                                    string loanchoice = Console.ReadLine();
+                                    //If the user decides to take the loan
+                                    if (loanchoice.ToUpper() == "YES")
+                                    {
+                                        //Adds the specified amount to the account of choice by user
+                                        customer.accounts[loanto][0] = (double.Parse(customer.accounts[loanto][0]) + loanamount).ToString();
+                                        Console.WriteLine($"{loanamount}{customer.accounts[loanto][1]} has been added to {loanto}");
+                                        break;
+                                    }
+                                    //Returns the user to the navigation menu if they choose not to take the loan
+                                    if (loanchoice.ToUpper() == "NO") { break; }
+
+                                    else Console.WriteLine("Invalid answer, please answer Yes or No");
+                                }
+                                break;
+                            }
+                            else Console.WriteLine("Account not found, try again");
+                        }
+                        else Console.WriteLine("You can't take a loan that is 5 times larger than what you currently have on your account");
+                     }
+                     break;
+
+                            
+                 }
+            }
+                    
         }
         public static void CustomerCreation() {
 
@@ -400,6 +490,18 @@ namespace BankApplication {
             //Creates a new customer object and adds it to the customerList
             customerList.Add(new Customer(name, password, new Dictionary<string, List<string>>()));
 
+        }
+
+        public static void PressEnter()
+        {
+            Console.WriteLine("\ntryck på ENTER för meny");
+            ConsoleKeyInfo x;
+            do
+            {
+                x = Console.ReadKey();
+            }
+            while (x.Key != ConsoleKey.Enter);
+            Console.Write("\n");
         }
 
         public static void DefaultUserCreation() {
