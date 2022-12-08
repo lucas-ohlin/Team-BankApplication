@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Globalization;
+using System.Linq;
 
 
 namespace BankApplication {
@@ -21,6 +22,8 @@ namespace BankApplication {
 
         //Exchange rate for USD
         private static float sekToUsd = 10.3f;
+
+        
 
         public static void LogIn() {
 
@@ -152,7 +155,9 @@ namespace BankApplication {
                         run = false;
                         LogIn();
                         break;
-                    
+                    case 7: Savingsaccount(account);
+                        break;
+
                 }
 
             }
@@ -186,7 +191,7 @@ namespace BankApplication {
                         if (curchoice.ToLower() == "kr" || curchoice == "$") {
 
                             //Add the account to the accounts dictionary with a default amount at 0 and the choosen currency
-                            customer.accounts.Add(newAccChoice, new List<string>() { 0.0f.ToString(), curchoice.ToLower() });
+                            customer.accounts.Add(newAccChoice, new List<string>() { 0.0f.ToString(), curchoice.ToLower(),"Personkonto" });
                             Console.WriteLine($"Account {newAccChoice} was added and it has {customer.accounts[newAccChoice][0]}{customer.accounts[newAccChoice][1]} in it");
                             break;
 
@@ -505,23 +510,23 @@ namespace BankApplication {
             //The list includes the balance of the account and what currency it has
             //When we're gonna create new accounts for the customers these are the things we're hopefully gonna call
             var customer1Dict = new Dictionary<string, List<string>>() {
-                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr" } },
-                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$" } },
+                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr", "Personkonto" } },
+                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$", "Personkonto" } },
             };
             //The name, the password and the dictionary from above ^
             Customer customer1 = new Customer("Tobias", "111", customer1Dict);
 
             //-----2nd customer-----
             var customer2Dict = new Dictionary<string, List<string>>() {
-                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr" } },
-                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$" } },
+                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr", "Personkonto" } },
+                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$", "Personkonto" } },
             };
             Customer customer2 = new Customer("Anas", "222", customer2Dict);
 
             //-----3rd customer-----
             var customer3Dict = new Dictionary<string, List<string>>() {
-                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr" } },
-                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$" } },
+                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr","Personkonto" } },
+                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$","Personkonto" } },
             };
             Customer customer3 = new Customer("Lucas", "333", customer3Dict);
 
@@ -535,6 +540,138 @@ namespace BankApplication {
 
             //Add the admin to the adminList
             adminList.Add(admin1);
+
+        }
+
+        public static void Savingsaccount(Customer customer)
+        {
+            float Rate = 0;
+            string Account = "";
+            float Balance = 0;
+
+            // A Tuple over available type of savings accounts
+            Tuple<string, string, float> Vacation = new Tuple<string, string, float>("1", "Vacation", 20f);
+            Tuple<string, string, float> Pension = new Tuple<string, string, float>("2", "Pension", 2.42f);
+            Tuple<string, string, float> Childsavings = new Tuple<string, string, float>("3", "Childsavings", 3.49f);
+
+
+            Console.WriteLine("What type of account do you want to open: Type nr");
+            Console.WriteLine($"{Vacation.Item1}.{Vacation.Item2} Rate: {Vacation.Item3}");
+            Console.WriteLine($"{Pension.Item1}.{Pension.Item2} Rate: {Pension.Item3}");
+            Console.WriteLine($"{Childsavings.Item1}.{Childsavings.Item2} Rate: {Childsavings.Item3}");
+
+
+
+            bool run = true;
+           // Depending on choice i take out the choosen Account
+            do
+            {
+                string choice = Console.ReadLine();
+
+                switch (choice)
+                {
+                    
+                    case "1":
+                        Account = Vacation.Item2;
+                        Rate = Vacation.Item3;
+                        run = false;
+                        break;
+                    case "2":
+                        Account = Pension.Item2;
+                        Rate = Pension.Item3;
+                        run = false;
+                        break;
+                    case "3":
+                        Account = Childsavings.Item2;
+                        Rate = Childsavings.Item3;
+                        run = false;
+                        break;
+                    default:
+                        Console.WriteLine("Option 1-3");
+                        break;
+                }
+
+            } while (run);
+
+            Console.WriteLine("What do you want to name your new account(between 2 and 10 characters)");
+
+            while (true)
+            {
+                string newAccChoice = Console.ReadLine();
+
+                //A character limit between 2 - 10
+                if (newAccChoice.Length > 10 || newAccChoice.Length < 2)
+                    Console.WriteLine("The account name needs to be between 2 and 10 characters");
+
+                //Check if the account name already exists
+                else if (customer.accounts.ContainsKey(newAccChoice))
+                    Console.WriteLine("This account already exists for this user");
+
+                else 
+                { 
+
+                    while (true)
+                    {
+                        float Depo;
+
+                        Console.WriteLine("Which currency do you want to use? \n Available types of currency:\nkr \n$");
+                        string curchoice = Console.ReadLine();
+
+                        Console.WriteLine("deposit");
+
+                        while (true)
+                        {
+                            // Parsing if entered a letter it will be a 0
+                            float.TryParse(Console.ReadLine(), out Depo);
+
+                            if (Depo > 0)
+                            {
+                                break;
+                            }
+                            else Console.WriteLine("Enter a valid sum");
+                        }
+
+                        
+                        //Check if the currency is either kr or $ and make it lower case
+                        if (curchoice.ToLower() == "kr" || curchoice == "$")
+                        {
+
+                            //Add the account to the accounts dictionary with a default amount at 0 and the choosen currency
+                            customer.accounts.Add(newAccChoice, new List<string>() { Depo.ToString(), curchoice.ToLower(),Account });
+                            
+                            Console.WriteLine($"Account {newAccChoice} was added and it has {Depo}{customer.accounts[newAccChoice][1]} in it");
+
+                            Console.WriteLine("Example how your Account will grow with your chosen Rate");
+
+                            int index = 0;
+                            float interestAmount = Depo * (Rate / 100);
+                            float TotalAmount = Depo + interestAmount;
+                            // while loop interest rate for 3 yeas
+                            while (index < 3)
+                            {
+                                index++;
+                                Console.WriteLine($"year:{index} Amount:{TotalAmount}");
+                                interestAmount = TotalAmount * (Rate / 100);
+                                TotalAmount = TotalAmount + interestAmount;
+
+                            }
+
+                                Console.ReadKey();
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid choice, try again");
+                        }
+
+                    }
+                    break;
+                }
+
+
+
+
+            }
 
         }
 
