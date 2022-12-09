@@ -20,11 +20,6 @@ namespace BankApplication {
         //List of admin objects
         public static List<Admin> adminList = new List<Admin>();
 
-        //Exchange rate for USD
-        private static float sekToUsd = 10.3f;
-
-        
-
         public static void LogIn() {
 
             Console.WriteLine("Welcome to the bank.\nPlease login.");
@@ -120,13 +115,23 @@ namespace BankApplication {
             bool run = true;
             while (run) {
 
-                Console.WriteLine("\n1. Check account balance\r\n2. Open new account\r\n3. Transfer between accounts\r\n4. Transfer funds to another costumer\r\n5. Take a loan\r\n6. Logout");
+                Console.WriteLine(
+                    "\n1. Check account balance\r\n" +
+                    "2. Open new account\r\n" +
+                    "3. Transfer between accounts\r\n" +
+                    "4. Transfer funds to another costumer\r\n" +
+                    "5. Take a loan\r\n" +
+                    "6. Open a savings account\r\n" +
+                    "7. Logout"
+                );
 
+                //Choice input
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
-                    Console.WriteLine("\nNumber 1-5.");
+                    Console.WriteLine("\nNumber 1-7.");
 
                 switch (choice)  {
+
                     default: //If not a valid choice
                         Console.WriteLine("Not a valid choice.");
                         break;
@@ -150,12 +155,13 @@ namespace BankApplication {
                     case 5: //Take a loan
                         Loan(account);
                         break;
-                    case 6: //Log out of customer
+                    case 6:
+                        Savingsaccount(account);
+                        break;
+                    case 7: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {account.Name}");
                         run = false;
                         LogIn();
-                        break;
-                    case 7: Savingsaccount(account);
                         break;
 
                 }
@@ -195,13 +201,13 @@ namespace BankApplication {
                             Console.WriteLine($"Account {newAccChoice} was added and it has {customer.accounts[newAccChoice][0]}{customer.accounts[newAccChoice][1]} in it");
                             break;
 
-                        } else {
-                            //Console.Clear();
+                        } 
+                        else 
                             Console.WriteLine("Invalid choice, try again");
-                        }
-
                     }
+
                     break;
+
                 }
 
             }
@@ -268,10 +274,6 @@ namespace BankApplication {
 
             } while (run == true);
 
-            //Suspends the current thread for the specified amount of time and clears the console
-            //Thread.Sleep(7000);
-            //Console.Clear();
-
         }
 
         private static void TransferBetweenCustomers(Customer customer) {
@@ -325,7 +327,6 @@ namespace BankApplication {
                     }
 
                     break;
-
                 }
 
                 //If no customer with the name inputed exists
@@ -364,8 +365,7 @@ namespace BankApplication {
 
         }
 
-        public static void ExchangeRate(Customer customer1, Customer customer2, string account1, string account2, float transfer1)
-        {
+        public static void ExchangeRate(Customer customer1, Customer customer2, string account1, string account2, float transfer1) {
 
             //Creates new variables that is later used
             float transfer2;
@@ -374,12 +374,13 @@ namespace BankApplication {
             string filePath = "ExchangeRate.txt";
 
             //Creates seperate txt file for exchange rate if ut does not currently exist
-            if (!File.Exists(filePath))
-            {
+            if (!File.Exists(filePath)) {
+
                 using StreamWriter sw = File.CreateText(filePath);
                 sw.WriteLine("10,3");
                 sw.WriteLine(DateTime.Now.ToString());
                 sw.Close();
+
             }
 
             //Checks the current exchange rate in the file
@@ -392,21 +393,18 @@ namespace BankApplication {
             sr.Close();
 
             //If its the same currency its sends over the same amount
-            if (currency1 == currency2)
-            {
+            if (currency1 == currency2) {
                 customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
                 customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer1).ToString();
             }
             //If its not the same and the second one is dollar the amount is divided by the exchange rate
-            else if (currency2 == "$")
-            {
+            else if (currency2 == "$") {
                 transfer2 = transfer1 / usdToSek;
                 customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
                 customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
             }
             //If its not the same and the second one is swedish crowns the amount is multiplied by the exchange rate
-            else if (currency2 == "kr")
-            {
+            else if (currency2 == "kr") {
                 transfer2 = transfer1 * usdToSek;
                 customer1.accounts[account1][0] = (float.Parse(customer1.accounts[account1][0]) - transfer1).ToString();
                 customer2.accounts[account2][0] = (float.Parse(customer2.accounts[account2][0]) + transfer2).ToString();
@@ -414,45 +412,52 @@ namespace BankApplication {
 
         }
        
-        public static void Loan(Customer customer)
-        {
+        public static void Loan(Customer customer) {
+
             double interest = 0.03;
-            while (true)
-            {
+
+            while (true) {
+
                  Console.WriteLine("How much would you like to loan?");
+
                  //Makes sure only numbers are entered and gets the amount the user wishes to loan
                  if (!double.TryParse(Console.ReadLine(), out double loanamount))
                      Console.WriteLine("Numbers only, try again:");
+
                  //Makes sure the user can't enter a number below 0
                  if (loanamount <= 0)
                      Console.WriteLine("Please choose an amount above 0");
-                 if (loanamount > 0)
-                 {
-                     while (true)
-                     {                   
+
+                 if (loanamount > 0) {
+
+                     while (true) {
+                        
                           customer.AccountName();
                           Console.WriteLine("Which account would you like to loan to?");
                           string loanto = Console.ReadLine();
                           if(loanto == "") { break; } //return to nav menu by pressing enter
-                        if ((double.Parse(customer.accounts[loanto][0]) * 5 > loanamount))
-                        {
+
+                        if ((double.Parse(customer.accounts[loanto][0]) * 5 > loanamount)) {
+
                             //Checks if the specified account exists
-                            if (customer.accounts.ContainsKey(loanto) == true)
-                            {
+                            if (customer.accounts.ContainsKey(loanto) == true) {
+
                                 //Displays the interest rate and how much the user will have to pay monthly
                                 Console.WriteLine($"The interest rate is currently: {interest * 100}%\nMonthly interest for a loan of {loanamount}{customer.accounts[loanto][1]} is {loanamount * interest}{customer.accounts[loanto][1]}");
                                 Console.WriteLine("\nDo you wish to take this loan? Yes or No");
-                                while (true)
-                                {
+
+                                while (true) {
+
                                     string loanchoice = Console.ReadLine();
+
                                     //If the user decides to take the loan
-                                    if (loanchoice.ToUpper() == "YES")
-                                    {
+                                    if (loanchoice.ToUpper() == "YES") {
                                         //Adds the specified amount to the account of choice by user
                                         customer.accounts[loanto][0] = (double.Parse(customer.accounts[loanto][0]) + loanamount).ToString();
                                         Console.WriteLine($"{loanamount}{customer.accounts[loanto][1]} has been added to {loanto}");
                                         break;
                                     }
+
                                     //Returns the user to the navigation menu if they choose not to take the loan
                                     if (loanchoice.ToUpper() == "NO") { break; }
 
@@ -465,12 +470,12 @@ namespace BankApplication {
                         else Console.WriteLine("You can't take a loan that is 5 times larger than what you currently have on your account");
                      }
                      break;
-
-                            
                  }
+
             }
-                    
+      
         }
+
         public static void CustomerCreation() {
 
             Console.WriteLine("\nName:");
@@ -492,16 +497,17 @@ namespace BankApplication {
 
         }
 
-        public static void PressEnter()
-        {
+        public static void PressEnter() {
+
             Console.WriteLine("\ntryck på ENTER för meny");
+
             ConsoleKeyInfo x;
-            do
-            {
+            do {
                 x = Console.ReadKey();
             }
             while (x.Key != ConsoleKey.Enter);
             Console.Write("\n");
+
         }
 
         public static void DefaultUserCreation() {
@@ -543,8 +549,8 @@ namespace BankApplication {
 
         }
 
-        public static void Savingsaccount(Customer customer)
-        {
+        public static void Savingsaccount(Customer customer) {
+
             float Rate = 0;
             string Account = "";
             float Balance = 0;
@@ -554,22 +560,18 @@ namespace BankApplication {
             Tuple<string, string, float> Pension = new Tuple<string, string, float>("2", "Pension", 2.42f);
             Tuple<string, string, float> Childsavings = new Tuple<string, string, float>("3", "Childsavings", 3.49f);
 
-
             Console.WriteLine("What type of account do you want to open: Type nr");
             Console.WriteLine($"{Vacation.Item1}.{Vacation.Item2} Rate: {Vacation.Item3}");
             Console.WriteLine($"{Pension.Item1}.{Pension.Item2} Rate: {Pension.Item3}");
             Console.WriteLine($"{Childsavings.Item1}.{Childsavings.Item2} Rate: {Childsavings.Item3}");
 
-
-
             bool run = true;
-           // Depending on choice i take out the choosen Account
-            do
-            {
+            // Depending on choice i take out the choosen Account
+            do {
+
                 string choice = Console.ReadLine();
 
-                switch (choice)
-                {
+                switch (choice) {
                     
                     case "1":
                         Account = Vacation.Item2;
@@ -589,14 +591,15 @@ namespace BankApplication {
                     default:
                         Console.WriteLine("Option 1-3");
                         break;
+
                 }
 
             } while (run);
 
             Console.WriteLine("What do you want to name your new account(between 2 and 10 characters)");
 
-            while (true)
-            {
+            while (true) {
+
                 string newAccChoice = Console.ReadLine();
 
                 //A character limit between 2 - 10
@@ -607,11 +610,10 @@ namespace BankApplication {
                 else if (customer.accounts.ContainsKey(newAccChoice))
                     Console.WriteLine("This account already exists for this user");
 
-                else 
-                { 
+                else { 
 
-                    while (true)
-                    {
+                    while (true) {
+
                         float Depo;
 
                         Console.WriteLine("Which currency do you want to use? \n Available types of currency:\nkr \n$");
@@ -619,8 +621,8 @@ namespace BankApplication {
 
                         Console.WriteLine("deposit");
 
-                        while (true)
-                        {
+                        while (true) {
+
                             // Parsing if entered a letter it will be a 0
                             float.TryParse(Console.ReadLine(), out Depo);
 
@@ -629,12 +631,12 @@ namespace BankApplication {
                                 break;
                             }
                             else Console.WriteLine("Enter a valid sum");
+
                         }
 
                         
                         //Check if the currency is either kr or $ and make it lower case
-                        if (curchoice.ToLower() == "kr" || curchoice == "$")
-                        {
+                        if (curchoice.ToLower() == "kr" || curchoice == "$") {
 
                             //Add the account to the accounts dictionary with a default amount at 0 and the choosen currency
                             customer.accounts.Add(newAccChoice, new List<string>() { Depo.ToString(), curchoice.ToLower(),Account });
@@ -647,8 +649,8 @@ namespace BankApplication {
                             float interestAmount = Depo * (Rate / 100);
                             float TotalAmount = Depo + interestAmount;
                             // while loop interest rate for 3 yeas
-                            while (index < 3)
-                            {
+                            while (index < 3) {
+
                                 index++;
                                 Console.WriteLine($"year:{index} Amount:{TotalAmount}");
                                 interestAmount = TotalAmount * (Rate / 100);
@@ -656,20 +658,20 @@ namespace BankApplication {
 
                             }
 
-                                Console.ReadKey();
+                            Console.ReadKey();
                             break;
+
                         }
-                        else
-                        {
+
+                        else {
                             Console.WriteLine("Invalid choice, try again");
                         }
 
                     }
+
                     break;
+
                 }
-
-
-
 
             }
 

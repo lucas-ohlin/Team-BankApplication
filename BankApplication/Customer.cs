@@ -34,7 +34,6 @@ namespace BankApplication {
 
             foreach (var account in accounts) 
                 Console.WriteLine($"{account.Value[2]} - {account.Key} has {account.Value[0]}{account.Value[1]}");
-                Console.ReadKey();
 
         }
 
