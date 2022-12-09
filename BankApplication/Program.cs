@@ -18,10 +18,10 @@ namespace BankApplication {
             //Gustav - 000
 
             //Creation of the 3 customers using the method from BankSystem as well as an Admin
-            BankSystem.DefaultUserCreation();
+            Users.DefaultUserCreation();
 
             //Calls the login method from the BankSystem class
-            BankSystem.LogIn();
+            LoginHandler.LogIn();
         
         }
 

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using System.Globalization;
-using System.Linq;
-
 
 namespace BankApplication {
 
@@ -13,162 +9,6 @@ namespace BankApplication {
     /// </summary>
 
     internal class BankSystem {
-
-        //List of customer objects
-        public static List<Customer> customerList = new List<Customer>();
-
-        //List of admin objects
-        public static List<Admin> adminList = new List<Admin>();
-
-        public static void LogIn() {
-
-            Console.WriteLine("Welcome to the bank.\nPlease login.");
-
-            //Store locally how many tries have been made by the user
-            byte tries = 0;
-
-            //A while do loop if tries is less than 3
-            do {
-
-                Console.WriteLine("\nname:");
-                string name = Console.ReadLine();
-
-                Console.WriteLine("password:");
-                string password = Console.ReadLine();
-
-                //Check if the name and password exist on the same object in the customerList
-                if (customerList.Exists(x => x.Name == name && x.Password == password)) {
-
-                    //Sends the correct account to the navmenu for further use
-                    Customer account = customerList.Find(x => x.Name == name && x.Password == password);
-                    NavigationMenu(account);
-                    break;
-
-                }
-
-                //If there's no such customer check if a admin with the name and password exist in the adminList
-                else if (adminList.Exists(x => x.Name == name && x.Password == password)) {
-
-                    //Sends the correct admin to the admin navmenu for further use
-                    Admin admin = adminList.Find(x => x.Name == name && x.Password == password);
-                    AdminNavigationMenu(admin);
-                    break;
-
-                }
-
-                //If the name and password doesn't exist in either list, add one to tries   
-                else if (!customerList.Exists(x => x.Name == name && x.Password == password) || !adminList.Exists(x => x.Name == name && x.Password == password)) {
-
-                    Console.WriteLine("\nNot a valid user, try again:");
-                    tries++;
-                    
-                }
-
-            } while (tries < 3);
-
-            Console.WriteLine("\nYour three tries are up.");
-
-        }
-
-        public static void AdminNavigationMenu(Admin admin) {
-
-            //Prints out the logged in admin name
-            Console.WriteLine($"\nWelcome ADMIN: {admin.Name}");
-
-            bool run = true;
-            while (run) {
-
-                Console.WriteLine("\n1. Admin information\r\n2. Create a new customer\r\n3. Logout");
-
-                byte choice;
-                if (!byte.TryParse(Console.ReadLine(), out choice))
-                    Console.WriteLine("\nNumber 1-2.");
-
-                switch (choice) {
-                    default: //If not a valid choice
-                        Console.WriteLine("Not a valid choice.");
-                        break;
-                    case 1: //Admin information
-                        admin.AdminInfo();
-                        PressEnter();
-                        break;
-                    case 2: //Create new customers
-                        CustomerCreation();
-                        PressEnter();
-                        break;
-                    case 3: //Log out of Admin
-                        Console.WriteLine($"\nLogged out of: {admin.Name}");
-                        run = false;
-                        LogIn();
-                        break;
-                }
-
-            }
-
-        }
-
-        public static void NavigationMenu(Customer account) {
-
-            //Prints out the logged in account name
-            Console.WriteLine($"\nWelcome: {account.Name}");
-
-            bool run = true;
-            while (run) {
-
-                Console.WriteLine(
-                    "\n1. Check account balance\r\n" +
-                    "2. Open new account\r\n" +
-                    "3. Transfer between accounts\r\n" +
-                    "4. Transfer funds to another costumer\r\n" +
-                    "5. Take a loan\r\n" +
-                    "6. Open a savings account\r\n" +
-                    "7. Logout"
-                );
-
-                //Choice input
-                byte choice;
-                if (!byte.TryParse(Console.ReadLine(), out choice))
-                    Console.WriteLine("\nNumber 1-7.");
-
-                switch (choice)  {
-
-                    default: //If not a valid choice
-                        Console.WriteLine("Not a valid choice.");
-                        break;
-                    case 1: //Check account balance
-                        Console.WriteLine($"All accounts for {account.Name}");
-                        account.CustomerInfo();
-                        PressEnter();
-                        break;
-                    case 2: //Open new account
-                        OpenAccount(account);
-                        PressEnter();
-                        break;
-                    case 3: //Transfer between accounts
-                        TransferbetweenAccounts(account);
-                        PressEnter();
-                        break;
-                    case 4: //Transfer between customers
-                        TransferBetweenCustomers(account);
-                        PressEnter();
-                        break;
-                    case 5: //Take a loan
-                        Loan(account);
-                        break;
-                    case 6:
-                        Savingsaccount(account);
-                        break;
-                    case 7: //Log out of customer
-                        Console.WriteLine($"\nLogged out of: {account.Name}");
-                        run = false;
-                        LogIn();
-                        break;
-
-                }
-
-            }
-
-        }
 
         public static void OpenAccount(Customer customer) {
 
@@ -258,11 +98,8 @@ namespace BankApplication {
                                 break;
 
                             } 
-                            else {
-                                //Console.Clear(); 
+                            else
                                 Console.WriteLine("Account not found of the name: " + transferTo);
-                            }
-
                         } 
                         else
                             Console.WriteLine("Amount is not valid");
@@ -276,7 +113,7 @@ namespace BankApplication {
 
         }
 
-        private static void TransferBetweenCustomers(Customer customer) {
+        public static void TransferBetweenCustomers(Customer customer) {
 
             //Displays the accounts in the logged in customer
             customer.CustomerInfo();
@@ -306,10 +143,10 @@ namespace BankApplication {
                 customerName = Console.ReadLine();
 
                 //Check if the customer exists in the list using the previous input
-                if (customerList.Exists(x => x.Name == customerName)) {
+                if (Users.customerList.Exists(x => x.Name == customerName)) {
 
                     //Create an object using the name
-                    customer2 = customerList.Find(x => x.Name == customerName);
+                    customer2 = Users.customerList.Find(x => x.Name == customerName);
 
                     //Display accounts in that customer
                     customer2.CustomerInfo();
@@ -330,7 +167,7 @@ namespace BankApplication {
                 }
 
                 //If no customer with the name inputed exists
-                else if (!customerList.Exists(x => x.Name == customerName))
+                else if (!Users.customerList.Exists(x => x.Name == customerName))
                     Console.WriteLine("Not a valid name, try again.");
             }
 
@@ -486,14 +323,14 @@ namespace BankApplication {
                 Console.WriteLine("The account name needs to be between 1 and 20 characters");
 
             //Check if the account name already exists
-            else if (customerList.Exists(x => x.Name == name)) 
+            else if (Users.customerList.Exists(x => x.Name == name)) 
                 Console.WriteLine("This account already exists for this user");
 
             Console.WriteLine("\nPassword:");
             string password = Console.ReadLine();
 
             //Creates a new customer object and adds it to the customerList
-            customerList.Add(new Customer(name, password, new Dictionary<string, List<string>>()));
+            Users.customerList.Add(new Customer(name, password, new Dictionary<string, List<string>>()));
 
         }
 
@@ -507,45 +344,6 @@ namespace BankApplication {
             }
             while (x.Key != ConsoleKey.Enter);
             Console.Write("\n");
-
-        }
-
-        public static void DefaultUserCreation() {
-
-            //The 1st string is the name of the account in the customer, 
-            //The list includes the balance of the account and what currency it has
-            //When we're gonna create new accounts for the customers these are the things we're hopefully gonna call
-            var customer1Dict = new Dictionary<string, List<string>>() {
-                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr", "Personkonto" } },
-                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$", "Personkonto" } },
-            };
-            //The name, the password and the dictionary from above ^
-            Customer customer1 = new Customer("Tobias", "111", customer1Dict);
-
-            //-----2nd customer-----
-            var customer2Dict = new Dictionary<string, List<string>>() {
-                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr", "Personkonto" } },
-                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$", "Personkonto" } },
-            };
-            Customer customer2 = new Customer("Anas", "222", customer2Dict);
-
-            //-----3rd customer-----
-            var customer3Dict = new Dictionary<string, List<string>>() {
-                { "Sparkonto", new List<string>() { 1000.0f.ToString(), "kr","Personkonto" } },
-                { "Lönekonto", new List<string>() { 2000.0f.ToString(), "$","Personkonto" } },
-            };
-            Customer customer3 = new Customer("Lucas", "333", customer3Dict);
-
-            //Add the customers to the customerList
-            customerList.Add(customer1);
-            customerList.Add(customer2);
-            customerList.Add(customer3);
-
-            //Admin creation
-            var admin1 = new Admin("Gustav", "000");
-
-            //Add the admin to the adminList
-            adminList.Add(admin1);
 
         }
 
@@ -627,14 +425,12 @@ namespace BankApplication {
                             float.TryParse(Console.ReadLine(), out Depo);
 
                             if (Depo > 0)
-                            {
                                 break;
-                            }
-                            else Console.WriteLine("Enter a valid sum");
+                            else 
+                                Console.WriteLine("Enter a valid sum");
 
                         }
 
-                        
                         //Check if the currency is either kr or $ and make it lower case
                         if (curchoice.ToLower() == "kr" || curchoice == "$") {
 
@@ -658,19 +454,14 @@ namespace BankApplication {
 
                             }
 
-                            Console.ReadKey();
                             break;
-
                         }
 
-                        else {
+                        else 
                             Console.WriteLine("Invalid choice, try again");
-                        }
-
                     }
 
                     break;
-
                 }
 
             }
