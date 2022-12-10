@@ -22,6 +22,16 @@ namespace BankApplication {
 
         public static void LogIn() {
 
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(@"  _______ _            ____            _     ____              _    
+ |__   __| |          |  _ \          | |   |  _ \            | |   
+    | |  | |__   ___  | |_) | ___  ___| |_  | |_) | __ _ _ __ | | __
+    | |  | '_ \ / _ \ |  _ < / _ \/ __| __| |  _ < / _` | '_ \| |/ /
+    | |  | | | |  __/ | |_) |  __/\__ \ |_  | |_) | (_| | | | |   < 
+    |_|  |_| |_|\___| |____/ \___||___/\__| |____/ \__,_|_| |_|_|\_\
+                                                                    
+                                                                    ");
+            Console.ResetColor();
             Console.WriteLine("Welcome to the bank.\nPlease login.");
 
             //Store locally how many tries have been made by the user
@@ -114,6 +124,14 @@ namespace BankApplication {
 
             bool run = true;
             while (run) {
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(@"  __  __              
+ |  \/  |___ _ _ _  _ 
+ | |\/| / -_) ' \ || |
+ |_|  |_\___|_||_\_,_|
+                      ");
+                Console.ResetColor();
 
                 Console.WriteLine(
                     "\n1. Check account balance\r\n" +
