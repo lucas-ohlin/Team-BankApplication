@@ -59,6 +59,14 @@ namespace BankApplication {
             bool run = true;
             while (run) {
 
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(@"  __  __              
+ |  \/  |___ _ _ _  _ 
+ | |\/| / -_) ' \ || |
+ |_|  |_\___|_||_\_,_|
+                      ");
+                Console.ResetColor();
+
                 Console.WriteLine(
                     "\n1. Check account balance\r\n" +
                     "2. Open new account\r\n" +
@@ -66,7 +74,8 @@ namespace BankApplication {
                     "4. Transfer funds to another costumer\r\n" +
                     "5. Take a loan\r\n" +
                     "6. Open a savings account\r\n" +
-                    "7. Logout"
+                    "7. See my activity log\r\n" +
+                    "8. Logout"
                 );
 
                 //Choice input
@@ -102,8 +111,13 @@ namespace BankApplication {
                     case 6:
                         BankSystem.Savingsaccount(account);
                         break;
-                    case 7: //Log out of customer
+                    case 7: //See the logged activites of the user
+                        BankSystem.SeeLog(account);
+                        break;
+                    case 8: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {account.Name}");
+                        string sendlog = $"{DateTime.Now}: {account.Name} logged out";
+                        BankSystem.Log(account, sendlog);
                         run = false;
                         LoginHandler.LogIn();
                         break;
