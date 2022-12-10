@@ -10,6 +10,180 @@ namespace BankApplication {
 
     internal class BankSystem {
 
+        //List of customer objects
+        public static List<Customer> customerList = new List<Customer>();
+
+        //List of admin objects
+        public static List<Admin> adminList = new List<Admin>();
+
+        public static void LogIn() {
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(@"  _______ _            ____            _     ____              _    
+ |__   __| |          |  _ \          | |   |  _ \            | |   
+    | |  | |__   ___  | |_) | ___  ___| |_  | |_) | __ _ _ __ | | __
+    | |  | '_ \ / _ \ |  _ < / _ \/ __| __| |  _ < / _` | '_ \| |/ /
+    | |  | | | |  __/ | |_) |  __/\__ \ |_  | |_) | (_| | | | |   < 
+    |_|  |_| |_|\___| |____/ \___||___/\__| |____/ \__,_|_| |_|_|\_\
+                                                                    
+                                                                    ");
+            Console.ResetColor();
+            Console.WriteLine("Welcome to the bank.\nPlease login.");
+
+            //Store locally how many tries have been made by the user
+            byte tries = 0;
+
+            //A while do loop if tries is less than 3
+            do {
+
+                Console.WriteLine("\nname:");
+                string name = Console.ReadLine();
+
+                Console.WriteLine("password:");
+                string password = Console.ReadLine();
+
+                //Check if the name and password exist on the same object in the customerList
+                if (customerList.Exists(x => x.Name == name && x.Password == password)) {
+
+                    //Sends the correct account to the navmenu for further use
+                    Customer account = customerList.Find(x => x.Name == name && x.Password == password);
+                    NavigationMenu(account);
+                    break;
+
+                }
+
+                //If there's no such customer check if a admin with the name and password exist in the adminList
+                else if (adminList.Exists(x => x.Name == name && x.Password == password)) {
+
+                    //Sends the correct admin to the admin navmenu for further use
+                    Admin admin = adminList.Find(x => x.Name == name && x.Password == password);
+                    AdminNavigationMenu(admin);
+                    break;
+
+                }
+
+                //If the name and password doesn't exist in either list, add one to tries   
+                else if (!customerList.Exists(x => x.Name == name && x.Password == password) || !adminList.Exists(x => x.Name == name && x.Password == password)) {
+
+                    Console.WriteLine("\nNot a valid user, try again:");
+                    tries++;
+                    
+                }
+
+            } while (tries < 3);
+
+            Console.WriteLine("\nYour three tries are up.");
+
+        }
+
+        public static void AdminNavigationMenu(Admin admin) {
+
+            //Prints out the logged in admin name
+            Console.WriteLine($"\nWelcome ADMIN: {admin.Name}");
+
+            bool run = true;
+            while (run) {
+
+                Console.WriteLine("\n1. Admin information\r\n2. Create a new customer\r\n3. Logout");
+
+                byte choice;
+                if (!byte.TryParse(Console.ReadLine(), out choice))
+                    Console.WriteLine("\nNumber 1-2.");
+
+                switch (choice) {
+                    default: //If not a valid choice
+                        Console.WriteLine("Not a valid choice.");
+                        break;
+                    case 1: //Admin information
+                        admin.AdminInfo();
+                        PressEnter();
+                        break;
+                    case 2: //Create new customers
+                        CustomerCreation();
+                        PressEnter();
+                        break;
+                    case 3: //Log out of Admin
+                        Console.WriteLine($"\nLogged out of: {admin.Name}");
+                        run = false;
+                        LogIn();
+                        break;
+                }
+
+            }
+
+        }
+
+        public static void NavigationMenu(Customer account) {
+
+            //Prints out the logged in account name
+            Console.WriteLine($"\nWelcome: {account.Name}");
+
+            bool run = true;
+            while (run) {
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(@"  __  __              
+ |  \/  |___ _ _ _  _ 
+ | |\/| / -_) ' \ || |
+ |_|  |_\___|_||_\_,_|
+                      ");
+                Console.ResetColor();
+
+                Console.WriteLine(
+                    "\n1. Check account balance\r\n" +
+                    "2. Open new account\r\n" +
+                    "3. Transfer between accounts\r\n" +
+                    "4. Transfer funds to another costumer\r\n" +
+                    "5. Take a loan\r\n" +
+                    "6. Open a savings account\r\n" +
+                    "7. Logout"
+                );
+
+                //Choice input
+                byte choice;
+                if (!byte.TryParse(Console.ReadLine(), out choice))
+                    Console.WriteLine("\nNumber 1-7.");
+
+                switch (choice)  {
+
+                    default: //If not a valid choice
+                        Console.WriteLine("Not a valid choice.");
+                        break;
+                    case 1: //Check account balance
+                        Console.WriteLine($"All accounts for {account.Name}");
+                        account.CustomerInfo();
+                        PressEnter();
+                        break;
+                    case 2: //Open new account
+                        OpenAccount(account);
+                        PressEnter();
+                        break;
+                    case 3: //Transfer between accounts
+                        TransferbetweenAccounts(account);
+                        PressEnter();
+                        break;
+                    case 4: //Transfer between customers
+                        TransferBetweenCustomers(account);
+                        PressEnter();
+                        break;
+                    case 5: //Take a loan
+                        Loan(account);
+                        break;
+                    case 6:
+                        Savingsaccount(account);
+                        break;
+                    case 7: //Log out of customer
+                        Console.WriteLine($"\nLogged out of: {account.Name}");
+                        run = false;
+                        LogIn();
+                        break;
+
+                }
+
+            }
+
+        }
+        
         public static void OpenAccount(Customer customer) {
 
             Console.WriteLine("What do you want to name your new account(between 4 and 20 characters)");
