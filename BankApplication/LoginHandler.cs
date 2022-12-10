@@ -8,6 +8,18 @@ namespace BankApplication {
 
         public static void LogIn() {
 
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(@"  _______ _            ____            _     ____              _    
+ |__   __| |          |  _ \          | |   |  _ \            | |   
+    | |  | |__   ___  | |_) | ___  ___| |_  | |_) | __ _ _ __ | | __
+    | |  | '_ \ / _ \ |  _ < / _ \/ __| __| |  _ < / _` | '_ \| |/ /
+    | |  | | | |  __/ | |_) |  __/\__ \ |_  | |_) | (_| | | | |   < 
+    |_|  |_| |_|\___| |____/ \___||___/\__| |____/ \__,_|_| |_|_|\_\
+                                                                    
+                                                                    ");
+            Console.ResetColor();
+            Console.WriteLine("Welcome to the bank.\nPlease login.");
+
             Console.WriteLine("Welcome to the bank.\nPlease login.");
 
             //Store locally how many tries have been made by the user
@@ -27,6 +39,11 @@ namespace BankApplication {
 
                     //Sends the correct account to the navmenu for further use
                     Customer account = Users.customerList.Find(x => x.Name == name && x.Password == password);
+
+                    //Logs the information
+                    string sendlog = $"{DateTime.Now}: {account.Name} logged in";
+                    BankSystem.Log(account, sendlog);
+
                     NavigationHandler.NavigationMenu(account);
                     break;
 

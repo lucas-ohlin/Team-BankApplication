@@ -39,6 +39,11 @@ namespace BankApplication {
                             //Add the account to the accounts dictionary with a default amount at 0 and the choosen currency
                             customer.accounts.Add(newAccChoice, new List<string>() { 0.0f.ToString(), curchoice.ToLower(),"Personkonto" });
                             Console.WriteLine($"Account {newAccChoice} was added and it has {customer.accounts[newAccChoice][0]}{customer.accounts[newAccChoice][1]} in it");
+
+                            //Logs the information
+                            string sendlog = $"{DateTime.Now}: Account {newAccChoice} was added and it has {customer.accounts[newAccChoice][0]}{customer.accounts[newAccChoice][1]} in it";
+                            Log(customer, sendlog);
+
                             break;
 
                         } 
@@ -92,6 +97,10 @@ namespace BankApplication {
 
                                 Console.WriteLine($"You have succesfully transfered {transfer}{customer.accounts[transferFrom][1]} from " +
                                     $"{transferFrom} to {transferTo}");
+
+                                //Logs the information
+                                string sendlog = $"{DateTime.Now}: You have succesfully transfered {transfer}{customer.accounts[transferFrom][1]} from {transferFrom} to {transferTo}";
+                                Log(customer, sendlog);
 
                                 customer.AccountName();
                                 run = false;
@@ -187,6 +196,11 @@ namespace BankApplication {
 
                     //Displays what was transfered and the new balance of the logged in customer
                     Console.WriteLine($"\nTransfered {amount}{customer.accounts[choice][1]} from {customer.Name} to {customer2.Name}");
+
+                    //Logs the information
+                    string sendlog = $"{DateTime.Now}: Transfered {amount}{customer.accounts[choice][1]} from {customer.Name} to {customer2.Name}";
+                    Log(customer, sendlog);
+
                     customer.CustomerInfo();
                     customer2.CustomerInfo();
 
@@ -292,6 +306,11 @@ namespace BankApplication {
                                         //Adds the specified amount to the account of choice by user
                                         customer.accounts[loanto][0] = (double.Parse(customer.accounts[loanto][0]) + loanamount).ToString();
                                         Console.WriteLine($"{loanamount}{customer.accounts[loanto][1]} has been added to {loanto}");
+
+                                        //Logs the information
+                                        string sendlog = $"{DateTime.Now}: Took a loan of {loanamount}{customer.accounts[loanto][1]} and added it to {loanto}";
+                                        Log(customer, sendlog);
+
                                         break;
                                     }
 
@@ -299,13 +318,18 @@ namespace BankApplication {
                                     if (loanchoice.ToUpper() == "NO") { break; }
 
                                     else Console.WriteLine("Invalid answer, please answer Yes or No");
+
                                 }
+
                                 break;
                             }
+
                             else Console.WriteLine("Account not found, try again");
                         }
+
                         else Console.WriteLine("You can't take a loan that is 5 times larger than what you currently have on your account");
                      }
+
                      break;
                  }
 
@@ -351,7 +375,6 @@ namespace BankApplication {
 
             float Rate = 0;
             string Account = "";
-            float Balance = 0;
 
             // A Tuple over available type of savings accounts
             Tuple<string, string, float> Vacation = new Tuple<string, string, float>("1", "Vacation", 20f);
@@ -444,6 +467,7 @@ namespace BankApplication {
                             int index = 0;
                             float interestAmount = Depo * (Rate / 100);
                             float TotalAmount = Depo + interestAmount;
+
                             // while loop interest rate for 3 yeas
                             while (index < 3) {
 
@@ -465,6 +489,37 @@ namespace BankApplication {
                 }
 
             }
+
+        }
+
+        public static void Log(Customer account, string sendlog) {
+
+            //Creates filename by adding a and b together
+            string a = account.Name;
+            string b = ".txt";
+            string filePath = a + b;
+
+            //Creates seperate txt file for exchange rate if ut does not currently exist
+            if (!File.Exists(filePath)) {
+                using StreamWriter sw = File.CreateText(filePath);
+                sw.Close();
+            }
+
+            //Writes text to the file when the method is called 
+            File.AppendAllText(filePath, sendlog + Environment.NewLine);
+
+        }
+
+        public static void SeeLog(Customer account) {
+
+            //Creates filename by adding a and b together
+            string a = account.Name;
+            string b = ".txt";
+            string filePath = a + b;
+
+            //Writes out all activites of the logged in user
+            string text = File.ReadAllText(filePath);
+            Console.WriteLine(text);
 
         }
 
