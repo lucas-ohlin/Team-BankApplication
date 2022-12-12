@@ -18,7 +18,7 @@ namespace BankApplication {
                                                                     
             ");
             Console.ResetColor();
-            Console.WriteLine("Welcome to the bank.\nPlease login."):
+            Console.WriteLine("Welcome to the bank.\nPlease login.");
 
             //Store locally how many tries have been made by the user
             byte tries = 0;
