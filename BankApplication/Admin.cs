@@ -27,15 +27,19 @@ namespace BankApplication {
 
         }
 
-        public static void AdminUpdateRates()
-        {
+        public static void AdminUpdateRates() {
+
             File.WriteAllText("ExchangeRate.txt", String.Empty);
+
             Console.WriteLine("What is the new USD to SEK rate:");
             string usdToSek = Console.ReadLine();
+
+            //Writes to the text file
             using StreamWriter sw = File.CreateText("ExchangeRate.txt");
             sw.WriteLine(usdToSek);
             sw.WriteLine(DateTime.Now.ToString());
             sw.Close();
+
         }
 
     }

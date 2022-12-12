@@ -361,7 +361,7 @@ namespace BankApplication {
 
         }
 
-        public static void Savingsaccount(Customer customer) {
+        public static void SavingsAccount(Customer customer) {
 
             float Rate = 0;
             string Account = "";
