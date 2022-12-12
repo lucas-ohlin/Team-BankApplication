@@ -64,7 +64,7 @@ namespace BankApplication {
  |  \/  |___ _ _ _  _ 
  | |\/| / -_) ' \ || |
  |_|  |_\___|_||_\_,_|
-                      ");
+                ");
                 Console.ResetColor();
 
                 Console.WriteLine(
@@ -109,7 +109,7 @@ namespace BankApplication {
                         BankSystem.Loan(account);
                         break;
                     case 6:
-                        BankSystem.Savingsaccount(account);
+                        BankSystem.SavingsAccount(account);
                         break;
                     case 7: //See the logged activites of the user
                         BankSystem.SeeLog(account);

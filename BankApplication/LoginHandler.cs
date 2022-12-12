@@ -16,11 +16,9 @@ namespace BankApplication {
     | |  | | | |  __/ | |_) |  __/\__ \ |_  | |_) | (_| | | | |   < 
     |_|  |_| |_|\___| |____/ \___||___/\__| |____/ \__,_|_| |_|_|\_\
                                                                     
-                                                                    ");
+            ");
             Console.ResetColor();
-            Console.WriteLine("Welcome to the bank.\nPlease login.");
-
-            Console.WriteLine("Welcome to the bank.\nPlease login.");
+            Console.WriteLine("Welcome to the bank.\nPlease login."):
 
             //Store locally how many tries have been made by the user
             byte tries = 0;
