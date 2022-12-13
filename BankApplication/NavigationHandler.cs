@@ -107,12 +107,15 @@ namespace BankApplication {
                         break;
                     case 5: //Take a loan
                         BankSystem.Loan(account);
+                        BankSystem.PressEnter();
                         break;
                     case 6:
                         BankSystem.SavingsAccount(account);
+                        BankSystem.PressEnter();
                         break;
                     case 7: //See the logged activites of the user
                         BankSystem.SeeLog(account);
+                        BankSystem.PressEnter();
                         break;
                     case 8: //Log out of customer
                         Console.WriteLine($"\nLogged out of: {account.Name}");
