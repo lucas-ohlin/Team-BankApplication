@@ -61,11 +61,13 @@ namespace BankApplication {
         public static void TransferbetweenAccounts(Customer customer) {
 
             float transfer;
+            string transferTo = "";
             bool run = true;
+
             Console.Clear();
             do {
 
-                //Write out only the account names of the logged in user
+                //Method for account names to show the user the alternatives
                 customer.AccountName();
                 Console.WriteLine("Which account do you want to transfer from: Name of the account");
                 string transferFrom = Console.ReadLine();
@@ -73,54 +75,71 @@ namespace BankApplication {
                 //Check if the accounts dictionary contains the correct account name
                 if (customer.accounts.ContainsKey(transferFrom) == true)
                 {
-
+                    // while loop to get the  first account to transfer money from
                     while (true)
                     {
+                        Console.WriteLine($"Amount to transfer from {transferFrom} : {customer.accounts[transferFrom][0]}");
 
-                        Console.WriteLine("Amount to transfer from {0} : {1}", transferFrom, customer.accounts[transferFrom][0]);
-
+                        // Handling letters and incorrect funds
                         if (!float.TryParse(Console.ReadLine(), out transfer))
-                            Console.Write("Numbers only: ");
+                            Console.Clear();
 
-                        //Parse the account balance as a double and check if its less than the amount specified for a transfer
+                        //Parsing the account balance and checking if the user has the funds
                         if (transfer > 0 && transfer <= float.Parse(customer.accounts[transferFrom][0]))
+                        {
+                            Console.Clear();
+                            // do while for the answer of account to transfer To
+                            do
                             {
-
                                 customer.AccountName();
 
                                 Console.WriteLine("Which of the accounts above do you want to transfer To:");
-                                string transferTo = Console.ReadLine();
+                                transferTo = Console.ReadLine();
 
-                                //Check if the accounts contains the name
-                                if (customer.accounts.ContainsKey(transferTo) == true)
+                                if (transferTo == transferFrom)
                                 {
-
-                                    //Check currency and send over correct exchange
-                                    ExchangeRate(customer, customer, transferFrom, transferTo, transfer);
-
-                                    Console.WriteLine($"You have succesfully transfered {transfer}{customer.accounts[transferFrom][1]} from " +
-                                        $"{transferFrom} to {transferTo}");
-
-                                    //Logs the information
-                                    string sendlog = $"{DateTime.Now}: You have succesfully transfered {transfer}{customer.accounts[transferFrom][1]} from {transferFrom} to {transferTo}";
-                                    Log(customer, sendlog);
-
-                                    customer.AccountName();
-                                    run = false;
-                                    break;
-
+                                    Console.WriteLine("You can not Transfer from and to the SAME account");
                                 }
-                                else
-                                Console.WriteLine("Account not found of the name: " + transferTo);
+                                else if (transferTo != transferFrom && customer.accounts.ContainsKey(transferTo) == true)
+                                {
+                                    break;
+                                }
+                                else Console.WriteLine("That account doesnt exist");
+
+                            } while (true);
+
+
+                            //Check if the accounts contains the name
+                            if (customer.accounts.ContainsKey(transferTo) == true)
+                            {
+                                Console.Clear();
+                                //Check currency and send over correct exchange
+                                ExchangeRate(customer, customer, transferFrom, transferTo, transfer);
+
+                                Console.WriteLine($"You have succesfully transfered {transfer}{customer.accounts[transferFrom][1]} from " +
+                                    $"{transferFrom} to {transferTo}");
+
+                                //Logs the information
+                                string sendlog = $"{DateTime.Now}: You have succesfully transfered {transfer}{customer.accounts[transferFrom][1]} from {transferFrom} to {transferTo}";
+                                Log(customer, sendlog);
+
+                                customer.AccountName();
+                                run = false;
+                                break;
                             }
                             else
-                            Console.WriteLine("Amount not valid");
+                                Console.WriteLine("Account not found of the name: " + transferTo);
+                        }
+                        else
+                            Console.WriteLine("Not a valid choice");
                     }
 
                 }
-                else Console.Clear();
+                else
+                {
+                    Console.Clear();
                     Console.WriteLine("Account not found of the name: " + transferFrom);
-
+                }
             } while (run == true);
 
         }
@@ -243,7 +262,7 @@ namespace BankApplication {
             string Time;
             usdToSek = float.Parse(sr.ReadLine());
             Time = sr.ReadLine();
-            Console.WriteLine("\nThe exchange rate was last updated:{0}", Time);
+            Console.WriteLine("The exchange rate was last updated:{0}", Time);
             sr.Close();
 
             //If its the same currency its sends over the same amount
