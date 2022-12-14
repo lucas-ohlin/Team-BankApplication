@@ -40,11 +40,9 @@ namespace BankApplication {
         //Method to only show accounts when the user chooses Account to transfer to/from
         public void AccountName() {
 
-            Console.WriteLine("\n");
-
             int index = 1;
             foreach (var account in accounts)
-                Console.WriteLine("{0}. {1}: {2} {3}", index++, account.Key,account.Value[0],account.Value[1]);
+                Console.WriteLine($"{index++}. {account.Key}: {account.Value[0]} {account.Value[1]}");
             
         }
 

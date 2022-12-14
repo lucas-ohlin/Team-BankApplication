@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace BankApplication {
 
@@ -61,36 +62,58 @@ namespace BankApplication {
         public static void TransferbetweenAccounts(Customer customer) {
 
             float transfer;
+            string transferTo = "";
             bool run = true;
 
+            Console.Clear();
             do {
 
-                //Write out only the account names of the logged in user
+                //Method for account names to show the user the alternatives
                 customer.AccountName();
                 Console.WriteLine("Which account do you want to transfer from: Name of the account");
                 string transferFrom = Console.ReadLine();
 
                 //Check if the accounts dictionary contains the correct account name
-                if (customer.accounts.ContainsKey(transferFrom) == true) {
+                if (customer.accounts.ContainsKey(transferFrom) == true)
+                {
+                    // while loop to get the  first account to transfer money from
+                    while (true)
+                    {
+                        Console.WriteLine($"Amount to transfer from {transferFrom} : {customer.accounts[transferFrom][0]}");
 
-                    while (true) {
-
-                        Console.WriteLine("Amount to transfer from {0} : {1}", transferFrom, customer.accounts[transferFrom][0]);
-
+                        // Handling letters and incorrect funds
                         if (!float.TryParse(Console.ReadLine(), out transfer))
-                            Console.WriteLine("Numbers only... Try again:");
+                            Console.Clear();
 
-                        //Parse the account balance as a double and check if its less than the amount specified for a transfer
-                        if (transfer > 0 && transfer <= double.Parse(customer.accounts[transferFrom][0])) {
+                        //Parsing the account balance and checking if the user has the funds
+                        if (transfer > 0 && transfer <= float.Parse(customer.accounts[transferFrom][0]))
+                        {
+                            Console.Clear();
+                            // do while for the answer of account to transfer To
+                            do
+                            {
+                                customer.AccountName();
 
-                            customer.AccountName();
+                                Console.WriteLine("Which of the accounts above do you want to transfer To:");
+                                transferTo = Console.ReadLine();
 
-                            Console.WriteLine("Which of the accounts above do you want to transfer To:");
-                            string transferTo = Console.ReadLine();
+                                if (transferTo == transferFrom)
+                                {
+                                    Console.WriteLine("You can not Transfer from and to the SAME account");
+                                }
+                                else if (transferTo != transferFrom && customer.accounts.ContainsKey(transferTo) == true)
+                                {
+                                    break;
+                                }
+                                else Console.WriteLine("That account doesnt exist");
+
+                            } while (true);
+
 
                             //Check if the accounts contains the name
-                            if (customer.accounts.ContainsKey(transferTo) == true) {
-
+                            if (customer.accounts.ContainsKey(transferTo) == true)
+                            {
+                                Console.Clear();
                                 //Check currency and send over correct exchange
                                 ExchangeRate(customer, customer, transferFrom, transferTo, transfer);
 
@@ -104,16 +127,20 @@ namespace BankApplication {
                                 customer.AccountName();
                                 run = false;
                                 break;
-
-                            } else
+                            }
+                            else
                                 Console.WriteLine("Account not found of the name: " + transferTo);
-                        } else
-                            Console.WriteLine("Amount is not valid");
+                        }
+                        else
+                            Console.WriteLine("Not a valid choice");
                     }
 
-                } else
+                }
+                else
+                {
+                    Console.Clear();
                     Console.WriteLine("Account not found of the name: " + transferFrom);
-
+                }
             } while (run == true);
 
         }
@@ -236,7 +263,7 @@ namespace BankApplication {
             string Time;
             usdToSek = float.Parse(sr.ReadLine());
             Time = sr.ReadLine();
-            Console.WriteLine("\nThe exchange rate was last updated:{0}", Time);
+            Console.WriteLine("The exchange rate was last updated:{0}", Time);
             sr.Close();
 
             //If its the same currency its sends over the same amount
@@ -357,56 +384,55 @@ namespace BankApplication {
                 x = Console.ReadKey();
             }
             while (x.Key != ConsoleKey.Enter);
-            Console.Write("\n");
+            Console.Clear();
 
         }
 
         public static void SavingsAccount(Customer customer) {
 
+            Console.Clear();
             float Rate = 0;
-            string Account = "";
+            string AccountName = "";
 
-            // A Tuple over available type of savings accounts
+            // A Tuple over available type of savings accounts that the bank has to offer
             Tuple<string, string, float> Vacation = new Tuple<string, string, float>("1", "Vacation", 20f);
             Tuple<string, string, float> Pension = new Tuple<string, string, float>("2", "Pension", 2.42f);
             Tuple<string, string, float> Childsavings = new Tuple<string, string, float>("3", "Childsavings", 3.49f);
 
             Console.WriteLine("What type of account do you want to open: Type nr");
-            Console.WriteLine($"{Vacation.Item1}.{Vacation.Item2} Rate: {Vacation.Item3}");
-            Console.WriteLine($"{Pension.Item1}.{Pension.Item2} Rate: {Pension.Item3}");
-            Console.WriteLine($"{Childsavings.Item1}.{Childsavings.Item2} Rate: {Childsavings.Item3}");
+            Console.WriteLine($"{Vacation.Item1}.{Vacation.Item2} Rate: {Vacation.Item3} %");
+            Console.WriteLine($"{Pension.Item1}.{Pension.Item2} Rate: {Pension.Item3} %");
+            Console.WriteLine($"{Childsavings.Item1}.{Childsavings.Item2} Rate: {Childsavings.Item3} %");
 
             bool run = true;
-            // Depending on choice i take out the choosen Account
+            // Depending on choice i take out the chosen Account
             do {
 
                 string choice = Console.ReadLine();
 
                 switch (choice) {
-
                     case "1":
-                        Account = Vacation.Item2;
+                        AccountName = Vacation.Item2;
                         Rate = Vacation.Item3;
                         run = false;
                         break;
                     case "2":
-                        Account = Pension.Item2;
+                        AccountName = Pension.Item2;
                         Rate = Pension.Item3;
                         run = false;
                         break;
                     case "3":
-                        Account = Childsavings.Item2;
+                        AccountName = Childsavings.Item2;
                         Rate = Childsavings.Item3;
                         run = false;
                         break;
                     default:
                         Console.WriteLine("Option 1-3");
                         break;
-
                 }
 
             } while (run);
-
+            Console.Clear();
             Console.WriteLine("What do you want to name your new account(between 2 and 10 characters)");
 
             while (true) {
@@ -419,40 +445,44 @@ namespace BankApplication {
 
                 //Check if the account name already exists
                 else if (customer.accounts.ContainsKey(newAccChoice))
-                    Console.WriteLine("This account already exists for this user");
+                    Console.WriteLine("You already have an account with this name");
 
                 else {
 
                     while (true) {
 
                         float Depo;
-
-                        Console.WriteLine("Which currency do you want to use? \n Available types of currency:\nkr \n$");
+                        Console.Clear();
+                        Console.WriteLine("Which currency do you want to use?\nAvailable types of currency:\nkr \n$");
                         string curchoice = Console.ReadLine();
 
-                        Console.WriteLine("deposit");
-
-                        while (true) {
-
-                            // Parsing if entered a letter it will be a 0
-                            float.TryParse(Console.ReadLine(), out Depo);
-
-                            if (Depo > 0)
-                                break;
-                            else
-                                Console.WriteLine("Enter a valid sum");
-
-                        }
-
-                        //Check if the currency is either kr or $ and make it lower case
+                        //If curency is correct, and ToLower to avoid misunderstandings
                         if (curchoice.ToLower() == "kr" || curchoice == "$") {
+                            Console.Clear();
+                            Console.WriteLine("What amount do you want to deposit");
+
+                            while (true)
+                            {
+                                // Parsing
+                                float.TryParse(Console.ReadLine(), out Depo);
+
+                                if (Depo > 0)
+                                    break;
+                                else
+                                    Console.WriteLine("Enter a valid sum");
+
+                            }
 
                             //Add the account to the accounts dictionary with a default amount at 0 and the choosen currency
-                            customer.accounts.Add(newAccChoice, new List<string>() { Depo.ToString(), curchoice.ToLower(), Account });
+                            customer.accounts.Add(newAccChoice, new List<string>() { Depo.ToString(), curchoice.ToLower(), AccountName });
+                            Console.Clear();
+                            Console.WriteLine($"Account {newAccChoice} was added and it has {Depo}{customer.accounts[newAccChoice][1]} in it.");
+                            Console.WriteLine("Press any button to continue and see your rate"); Console.ReadKey(); Console.Clear();
+                            Console.WriteLine("Example how your Account will grow with your chosen rate.");
 
-                            Console.WriteLine($"Account {newAccChoice} was added and it has {Depo}{customer.accounts[newAccChoice][1]} in it");
-
-                            Console.WriteLine("Example how your Account will grow with your chosen Rate");
+                            //Logs the information
+                            string sendlog = $"{DateTime.Now}: Account {newAccChoice} was added and it has {Depo}{customer.accounts[newAccChoice][1]} in it, and a rate of {Rate} %";
+                            Log(customer, sendlog);
 
                             int index = 0;
                             float interestAmount = Depo * (Rate / 100);
@@ -465,14 +495,18 @@ namespace BankApplication {
                                 Console.WriteLine($"year:{index} Amount:{TotalAmount}");
                                 interestAmount = TotalAmount * (Rate / 100);
                                 TotalAmount = TotalAmount + interestAmount;
-
                             }
-
                             break;
                         } else
-                            Console.WriteLine("Invalid choice, try again");
+                            Console.WriteLine("Invalid currency choice..... Loading choices"); 
+                             
+                             // finess for fun
+                             for (int i = 3; i >= 1; i--)
+                             {
+                               Console.WriteLine(i);
+                               Thread.Sleep(700);
+                             }
                     }
-
                     break;
                 }
 
