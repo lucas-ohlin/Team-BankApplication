@@ -1,4 +1,15 @@
 # BankApplication
+
+### Made By - Team Pineapple 🍍
+* Damir
+* Emil
+* John
+* Lucas
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+<img src="https://user-images.githubusercontent.com/113690228/208114210-1d90ab1f-0639-4aeb-a3d9-fce6f281e871.png" align="right" height="450px">
+
 Program is where the program starts and calls on other classes
 
 Users creates all the users at the start of the program.
