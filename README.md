@@ -1,6 +1,6 @@
 # BankApplication - By Team Pineapple 🍍
 A group project on making a bank application using C# and the .NET Core Framework.
-The [requirements](https://qlok.notion.site/Initial-backlog-03eb10ead8f047b3aff215f8c9b47d0e) provided to us by the bank owner (the teacher) 
+The [requirements](https://qlok.notion.site/Initial-backlog-03eb10ead8f047b3aff215f8c9b47d0e) provided to us by the project backlog. The planning of the project was made using [Trello](https://trello.com/b/toGN7sg8/bankapplication).
 
 ### Contributors
 * [Damir Mehic](https://github.com/DammirM)
