@@ -14,6 +14,19 @@ https://github.com/lucas-ohlin/Team-BankApplication.git
 ```
 Or download the whole repository as a zip file by clicking the green button and press the `Download ZIP`
 
+When starting the application you'll be met with this window:
+
+![Skärmbild 2022-12-17 175207](https://user-images.githubusercontent.com/113690228/208254615-06f41f54-9858-4fd9-820d-ceb319420a9b.png)
+
+Here you'll need to login using a name and a password of either a customer or admin
+
+If you've logged into a customer account you'll be met with this screen:
+
+![Skärmbild 2022-12-17 184425](https://user-images.githubusercontent.com/113690228/208254665-cfcd97f5-89b2-4de0-b358-f8fe046d8d09.png)
+
+If you've logged into a admin account you'll be met with this screen:
+
+![Skärmbild 2022-12-17 184404](https://user-images.githubusercontent.com/113690228/208254683-550bd7ba-6025-4ae3-a571-eeea36382b01.png)
 
 
 ## Structure Of The Project
