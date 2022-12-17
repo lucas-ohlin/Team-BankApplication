@@ -23,7 +23,7 @@ namespace BankApplication {
 
                 byte choice;
                 if (!byte.TryParse(Console.ReadLine(), out choice))
-                    Console.WriteLine("\nNumber 1-2.");
+                    Console.WriteLine("\nNumber 1-3.");
 
                 switch (choice) {
 
@@ -38,7 +38,11 @@ namespace BankApplication {
                         BankSystem.CustomerCreation();
                         BankSystem.PressEnter();
                         break;
-                    case 3: //Log out of Admin
+                    case 3: //Change exchange rate in USD to SEK
+                        admin.AdminUpdateRates();
+                        BankSystem.PressEnter();
+                        break;
+                    case 4: //Log out of Admin
                         Console.WriteLine($"\nLogged out of: {admin.Name}");
                         run = false;
                         LoginHandler.LogIn();

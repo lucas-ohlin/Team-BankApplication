@@ -27,7 +27,7 @@ namespace BankApplication {
 
         }
 
-        public static void AdminUpdateRates() {
+        public void AdminUpdateRates() {
 
             File.WriteAllText("ExchangeRate.txt", String.Empty);
 
