@@ -7,16 +7,6 @@ namespace BankApplication {
 
         private static void Main(string[] args) {
 
-            //TEMP INFORMATION
-
-            //Default Customer logins
-            //Tobias - 111
-            //Anas - 222
-            //Lucas - 333
-
-            //Default Admin Login
-            //Gustav - 000
-
             //Creation of the 3 customers using the method from BankSystem as well as an Admin
             Users.DefaultUserCreation();
 
