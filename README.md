@@ -1,13 +1,22 @@
-# BankApplication
+# BankApplication - By Team Pineapple 🍍
+A group project on making a bank application using C# and the .NET Core Framework.
 
-### Made By - Team Pineapple 🍍
-* Damir
-* Emil
-* John
-* Lucas
+### Contributors
+* [Damir Mehic](https://github.com/DammirM)
+* [Emil Treptow](https://github.com/Lykrat)
+* [John Albrektsson](https://github.com/JohnAlbrektsson)
+* [Lucas Persson Öhlin](https://github.com/lucas-ohlin) 
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+## Installation & Guide For The Application
+To install the application either clone the repository using this link:
+```sh
+https://github.com/lucas-ohlin/Team-BankApplication.git
+```
+Or download the whole repository as a zip file by clicking the green button and press the `Download ZIP`
+
+
+
+## Structure Of The Project
 <img src="https://user-images.githubusercontent.com/113690228/208114210-1d90ab1f-0639-4aeb-a3d9-fce6f281e871.png" align="right" height="450px">
 
 Program is where the program starts and calls on other classes
