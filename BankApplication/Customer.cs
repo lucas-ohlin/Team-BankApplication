@@ -3,10 +3,6 @@ using System.Collections.Generic;
 
 namespace BankApplication {
 
-    /// <summary>
-    /// Customer class which is made up of; name, password and account(s)
-    /// </summary>
-
     internal class Customer : User {
 
         //Accout list for the customer
